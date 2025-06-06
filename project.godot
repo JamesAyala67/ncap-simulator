@@ -14,3 +14,7 @@ config/name="NCAP Simulator"
 run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/road-generator/plugin.cfg")

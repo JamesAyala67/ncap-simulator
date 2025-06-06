@@ -1,20 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://7d3opusjinc6"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_g0s87"]
+[sub_resource type="BoxMesh" id="BoxMesh_q6cjc"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_quv66"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_oe23o"]
 
 [node name="platformScene" type="Node3D"]
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, -3.5)
-mesh = SubResource("BoxMesh_g0s87")
+transform = Transform3D(15, 0, 0, 0, 0.5, 0, 0, 0, 50, 0, 0, 0)
+mesh = SubResource("BoxMesh_q6cjc")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
-shape = SubResource("BoxShape3D_quv66")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.906308, 0.422618, 0, -0.422618, 0.906308, 0, 7.07539, 11.9299)
-fov = 45.0
+shape = SubResource("BoxShape3D_oe23o")

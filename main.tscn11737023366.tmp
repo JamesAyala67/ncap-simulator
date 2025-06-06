@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://q67r6e6eok01"]
+[gd_scene load_steps=7 format=3 uid="uid://q67r6e6eok01"]
 
 [ext_resource type="PackedScene" uid="uid://7d3opusjinc6" path="res://assets/scenes/platform_scene.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://delqvwu2ejbs3" path="res://assets/scenes/player_movement.tscn" id="2_h2yge"]
 [ext_resource type="Shader" uid="uid://bqxgb56fiqo2n" path="res://assets/scripts/CCTVShader.gdshader" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/movement.gd" id="4_7mycd"]
 [ext_resource type="Script" uid="uid://sjc741ekq31b" path="res://assets/scripts/main.gd" id="5_lquwl"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
@@ -13,18 +14,20 @@ shader_parameter/time = 0.0
 script = ExtResource("5_lquwl")
 spawn_entities = Array[PackedScene]([ExtResource("2_h2yge")])
 
+[node name="platformScene" parent="." instance=ExtResource("1_0xm2m")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.65407)
+
+[node name="player_movement" parent="." instance=ExtResource("2_h2yge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6, 0.27, 0)
+script = ExtResource("4_7mycd")
+
 [node name="spawnpoints" type="Node3D" parent="."]
 
 [node name="spawnpoint1" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, 0)
 
 [node name="spawnpoint2" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.5, 0, 0)
 
 [node name="spawnpoint3" type="Marker3D" parent="spawnpoints"]
-
-[node name="platformScene" parent="." instance=ExtResource("1_0xm2m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.65407)
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.917248, 0.398317, 0, -0.398317, 0.917248, 0, 9.56295, 22.7089)
