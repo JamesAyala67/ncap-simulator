@@ -1,0 +1,21 @@
+[gd_scene load_steps=3 format=3 uid="uid://q67r6e6eok01"]
+
+[ext_resource type="PackedScene" uid="uid://7d3opusjinc6" path="res://assets/scenes/platform_scene.tscn" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://delqvwu2ejbs3" path="res://assets/scenes/player_movement.tscn" id="2_h2yge"]
+
+[node name="main" type="Node3D"]
+
+[node name="platformScene" parent="." instance=ExtResource("1_0xm2m")]
+
+[node name="player_movement" parent="." instance=ExtResource("2_h2yge")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.13456, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.173648, 0.254887, -0.951251, 0, 0.965926, 0.258819, 0.984808, -0.0449435, 0.167731, -19.4089, 9.08284, 0)
+light_color = Color(0.62, 0.905, 1, 1)
+light_angular_distance = 15.0
+light_specular = 3.5
+shadow_enabled = true
+shadow_normal_bias = 1.5
+shadow_opacity = 0.75
+shadow_blur = 0.0
