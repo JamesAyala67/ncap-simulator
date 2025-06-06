@@ -45,12 +45,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7.65407)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.917248, 0.398317, 0, -0.398317, 0.917248, 0, 9.56295, 4.58482)
+transform = Transform3D(1, 0, 0, 0, 0.925216, 0.37944, 0, -0.37944, 0.925216, 0, 9.56295, 13.3142)
 current = true
 fov = 27.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.173648, 0.254887, -0.951251, 0, 0.965926, 0.258819, 0.984808, -0.0449434, 0.167731, -19.4089, 9.08284, 0)
+transform = Transform3D(0.173648, 0.254887, -0.951251, -0.0171013, 0.966561, 0.255867, 0.984659, -0.0281632, 0.1722, -13.6187, 9.08284, 0)
 light_color = Color(0.62, 0.905, 1, 1)
 light_angular_distance = 15.0
 light_specular = 3.5

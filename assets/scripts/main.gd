@@ -63,11 +63,18 @@ func _spawn_entity_at(spawn_point: Marker3D):
 	var entity_scene = spawn_entities.pick_random()
 	var entity = entity_scene.instantiate()
 	entity.global_transform = spawn_point.global_transform
+	var Violator = randi() % 2 == 0
+	print(Violator)
 
 	var randomized_speed = spawn_speed + randf_range(-spawn_speed_variance, spawn_speed_variance)
 	entity.set("speed", max(randomized_speed, 0.1))
-
+	entity.set_meta("violator", Violator)
+	print(entity)
+	print(entity.speed)
+	print(entity)
 	add_child(entity)
+	#entity.is_violator = Violator
+	#print(entity.is_violator)
 
 func _on_speed_timer():
 	# Increase base speed
