@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://c7skkvox23tem"
-path="res://.godot/imported/low-poly_cartoon_style_car_03.glb-16e7a56d15784c91741c2db7365af971.scn"
+path="res://.godot/imported/low-poly_cartoon_style_car_03.glb-155f9deef7b92746fcb6e89399c729b6.scn"
 
 [deps]
 
-source_file="res://assets/characters/low-poly_cartoon_style_car_03.glb"
-dest_files=["res://.godot/imported/low-poly_cartoon_style_car_03.glb-16e7a56d15784c91741c2db7365af971.scn"]
+source_file="res://assets/characters/Car 1/low-poly_cartoon_style_car_03.glb"
+dest_files=["res://.godot/imported/low-poly_cartoon_style_car_03.glb-155f9deef7b92746fcb6e89399c729b6.scn"]
 
 [params]
 

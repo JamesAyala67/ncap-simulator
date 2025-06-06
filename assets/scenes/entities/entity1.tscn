@@ -1,12 +1,12 @@
 [gd_scene load_steps=4 format=3 uid="uid://delqvwu2ejbs3"]
 
-[ext_resource type="PackedScene" uid="uid://c7skkvox23tem" path="res://assets/characters/low-poly_cartoon_style_car_03.glb" id="1_7lhlj"]
+[ext_resource type="PackedScene" uid="uid://c7skkvox23tem" path="res://assets/characters/Car 1/low-poly_cartoon_style_car_03.glb" id="1_7lhlj"]
 [ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/movement.gd" id="1_edkwo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_edkwo"]
 size = Vector3(0.83, 0.75, 1)
 
-[node name="player_movement" type="CharacterBody3D"]
+[node name="entity1" type="CharacterBody3D"]
 script = ExtResource("1_edkwo")
 
 [node name="Car" parent="." instance=ExtResource("1_7lhlj")]

@@ -2,20 +2,20 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bcfvlj6wvgdxx"
-path.s3tc="res://.godot/imported/low-poly_cartoon_style_car_03_1.png-eda2d36a585781fbb9fccc9a639a3041.s3tc.ctex"
+uid="uid://ckrew4teyb6os"
+path.s3tc="res://.godot/imported/lowpoly_car_pack_0.png-f15ab5e65aff39aa0d586bd358829ab2.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
 }
 generator_parameters={
-"md5": "304b0d1e90c31460715d41ec0113cd3d"
+"md5": "848cc6664f286c8e34de4a2b80898c05"
 }
 
 [deps]
 
-source_file="res://assets/characters/low-poly_cartoon_style_car_03_1.png"
-dest_files=["res://.godot/imported/low-poly_cartoon_style_car_03_1.png-eda2d36a585781fbb9fccc9a639a3041.s3tc.ctex"]
+source_file="res://assets/characters/Car 2/lowpoly_car_pack_0.png"
+dest_files=["res://.godot/imported/lowpoly_car_pack_0.png-f15ab5e65aff39aa0d586bd358829ab2.s3tc.ctex"]
 
 [params]
 
