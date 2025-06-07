@@ -88,10 +88,11 @@ func on_entity_clicked(entity):
 		# Optional: combo_counter = 0  # reset combo if needed
 		
 func _process(delta):
-	var overlay = $CanvasLayer/ColorRect
-	if overlay.material is ShaderMaterial:
-		overlay.material.set_shader_parameter("time", Time.get_ticks_msec() / 1000.0)
-		
+	var color_rect = $CanvasLayer/ColorRect
+	var mat = color_rect.material
+	if mat is ShaderMaterial:
+		mat.set_shader_parameter("time", Time.get_ticks_msec() / 1000.0)
+
 	# Blink "REC" text
 	if $CanvasLayer.has_node("REC"):
 		$CanvasLayer/REC.visible = int(Time.get_ticks_msec() / 500) % 2 == 0
@@ -99,3 +100,24 @@ func _process(delta):
 	# Show time
 	if $CanvasLayer.has_node("TimeLabel"):
 		$CanvasLayer/TimeLabel.text = Time.get_datetime_string_from_system()
+
+func _unhandled_input(event):
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var camera = $Camera3D  # Adjust path if needed
+		
+		var from = camera.project_ray_origin(event.position)
+		var to = from + camera.project_ray_normal(event.position) * 100
+		
+		var ray_params = PhysicsRayQueryParameters3D.new()
+		ray_params.from = from
+		ray_params.to = to
+		ray_params.collide_with_areas = true
+		ray_params.collide_with_bodies = true
+		
+		var space_state = get_world_3d().direct_space_state
+		var result = space_state.intersect_ray(ray_params)
+		
+		if result:
+			var clicked = result.collider
+			if clicked.is_in_group("poofable"):
+				clicked.call_deferred("go_poof")
