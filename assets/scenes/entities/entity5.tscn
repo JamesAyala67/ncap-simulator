@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://teuu6owpddhj"]
+
+[ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_vefsr"]
+[ext_resource type="PackedScene" uid="uid://f7yypyto4kgp" path="res://assets/characters/Car 5/Public-Bus.glb" id="2_vefsr"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
+size = Vector3(0.85, 1.019, 5)
+
+[node name="Entity5" type="CharacterBody3D"]
+script = ExtResource("1_vefsr")
+category = "bus"
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5805, -0.0722173)
+shape = SubResource("BoxShape3D_pde2e")
+
+[node name="Public-Bus" parent="." instance=ExtResource("2_vefsr")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)

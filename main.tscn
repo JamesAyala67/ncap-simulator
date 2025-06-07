@@ -1,12 +1,17 @@
-[gd_scene load_steps=18 format=3 uid="uid://q67r6e6eok01"]
+[gd_scene load_steps=23 format=3 uid="uid://q67r6e6eok01"]
 
 [ext_resource type="PackedScene" uid="uid://7d3opusjinc6" path="res://assets/scenes/platform_scene.tscn" id="1_0xm2m"]
-[ext_resource type="PackedScene" uid="uid://delqvwu2ejbs3" path="res://assets/scenes/entities/entity1.tscn" id="2_h2yge"]
-[ext_resource type="PackedScene" uid="uid://mswx7eaqggyd" path="res://assets/scenes/entities/entity2.tscn" id="3_lquwl"]
+[ext_resource type="PackedScene" uid="uid://tysbdpscvwjy" path="res://assets/scenes/entities/entity1.tscn" id="2_7mycd"]
+[ext_resource type="PackedScene" uid="uid://br0d2v1oj3nxl" path="res://assets/scenes/entities/entity2.tscn" id="3_5vw27"]
 [ext_resource type="Shader" uid="uid://bqxgb56fiqo2n" path="res://assets/scripts/CCTVShader.gdshader" id="4_1bvp3"]
 [ext_resource type="Shader" uid="uid://bshhv7t86s02l" path="res://assets/scripts/stylizedShader.gdshader" id="4_272bh"]
+[ext_resource type="PackedScene" uid="uid://bbpffx383jyld" path="res://assets/scenes/entities/entity3.tscn" id="4_kek77"]
+[ext_resource type="PackedScene" uid="uid://dcydfc3x2w42c" path="res://assets/scenes/entities/entity4.tscn" id="5_4c57u"]
 [ext_resource type="Texture2D" uid="uid://daqjyopkud7m1" path="res://assets/images/Sun.png" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://sjc741ekq31b" path="res://assets/scripts/main.gd" id="5_lquwl"]
+[ext_resource type="PackedScene" uid="uid://teuu6owpddhj" path="res://assets/scenes/entities/entity5.tscn" id="6_4c57u"]
+[ext_resource type="PackedScene" uid="uid://b8726owqx7wyu" path="res://assets/scenes/entities/entity6.tscn" id="7_efxa6"]
+[ext_resource type="Texture2D" uid="uid://xhsprx5a2j8j" path="res://assets/images/clock-svgrepo-com.svg" id="12_dg77c"]
 
 [sub_resource type="Curve" id="Curve_272bh"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.118852, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.735409), 0.0, 0.0, 0, 0]
@@ -66,16 +71,13 @@ glow_enabled = true
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
 shader = ExtResource("4_1bvp3")
 shader_parameter/time = 0.0
+shader_parameter/slowdown_intensity = 0.0
 
 [node name="main" type="Node3D"]
 script = ExtResource("5_lquwl")
-spawn_interval = 2.0
-speed_increment = 2.0
-spawn_entities = Array[PackedScene]([ExtResource("3_lquwl"), ExtResource("2_h2yge")])
+spawn_entities = Array[PackedScene]([ExtResource("5_4c57u"), ExtResource("2_7mycd"), ExtResource("3_5vw27"), ExtResource("4_kek77"), ExtResource("6_4c57u"), ExtResource("7_efxa6")])
 spawn_points_group = NodePath("spawnpoints")
-default_spawn_indexes = Array[int]([0, 2])
-random_spawn_chance = 0.3
-lane_categories = Array[String](["commuter", "motorcycle", "bus"])
+default_spawn_indexes = Array[int]([0, 0, 1, 2, 2, 3, 3, 4])
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vivmo")
@@ -84,42 +86,36 @@ environment = SubResource("Environment_vivmo")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -57.0352)
 
 [node name="spawnpoint1" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.752577, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.3, 0, 0)
 
 [node name="spawnpoint2" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.1349, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 0, 0)
 
 [node name="spawnpoint3" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.46533, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 0, 0)
 
 [node name="spawnpoint4" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0, 0)
 
 [node name="spawnpoint5" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.46712, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 0)
 
 [node name="spawnpoint6" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.67274, 0, 0)
-
-[node name="spawnpoint7" type="Marker3D" parent="spawnpoints"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.4065, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.75, 0, 0)
 
 [node name="platformScene" parent="." instance=ExtResource("1_0xm2m")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -29.6493)
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, -29.6493)
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.925216, 0.37944, 0, -0.37944, 0.925216, 0, 9.56295, -19.3541)
+transform = Transform3D(1, 0, 0, 0, 0.951057, 0.309017, 0, -0.309017, 0.951057, -0.256, 9.275, 11.95)
 current = true
-fov = 27.0
+fov = 24.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.0960713, 0.911336, -0.400299, -0.145659, 0.410701, 0.90006, 0.984659, -0.0281632, 0.1722, -13.6187, 9.08284, 0)
+transform = Transform3D(0.258819, 0.25, -0.933013, 0, 0.965926, 0.258819, 0.965926, -0.0669873, 0.25, -23.6256, 13.6636, -28.3627)
 light_color = Color(0.62, 0.905, 1, 1)
-light_angular_distance = 15.0
-light_specular = 3.5
 shadow_enabled = true
-shadow_normal_bias = 1.5
-shadow_opacity = 0.75
+shadow_opacity = 0.65
 shadow_blur = 0.0
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
@@ -164,6 +160,13 @@ offset_right = 1094.0
 offset_bottom = 231.0
 text = "Combo: 0"
 
+[node name="ComboMeter" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 817.0
+offset_top = 238.0
+offset_right = 1109.0
+offset_bottom = 265.0
+max_value = 50.0
+
 [node name="LivesLabel" type="Label" parent="CanvasLayer"]
 offset_left = 1064.0
 offset_top = 278.0
@@ -184,3 +187,46 @@ offset_bottom = -61.0
 grow_horizontal = 2
 grow_vertical = 2
 scale = Vector2(2, 2)
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="SlowdownButton" type="TextureButton" parent="CanvasLayer"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -266.0
+offset_top = -85.0
+offset_right = -266.0
+offset_bottom = -85.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(0.09, 0.09)
+texture_normal = ExtResource("12_dg77c")
+ignore_texture_size = true
+
+[node name="SlowdownCooldownLabel" type="Label" parent="CanvasLayer"]
+offset_left = 884.0
+offset_top = 540.0
+offset_right = 924.0
+offset_bottom = 563.0
+
+[node name="SlowdownPopupLabel" type="Label" parent="CanvasLayer"]
+modulate = Color(0.96623, 3.08037e-06, 9.62615e-07, 1)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -204.0
+offset_right = 20.0
+offset_bottom = -149.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+horizontal_alignment = 1
+vertical_alignment = 1

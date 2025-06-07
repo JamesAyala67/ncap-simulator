@@ -1,16 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://clsmafojkfoea"]
+[gd_scene load_steps=4 format=3 uid="uid://dcydfc3x2w42c"]
 
 [ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_fpv1m"]
-[ext_resource type="PackedScene" uid="uid://c7skkvox23tem" path="res://assets/characters/Car 1/low-poly_cartoon_style_car_03.glb" id="2_mu7yl"]
+[ext_resource type="PackedScene" uid="uid://cr20xsjg6wmw2" path="res://assets/characters/Car 4/jeepney.glb" id="2_fpv1m"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_edkwo"]
-size = Vector3(0.83, 0.75, 1)
+[sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
+size = Vector3(0.875, 0.827, 4.5)
 
-[node name="entity1" type="CharacterBody3D"]
+[node name="Entity4" type="CharacterBody3D"]
 script = ExtResource("1_fpv1m")
 
-[node name="Car" parent="." instance=ExtResource("2_mu7yl")]
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00527692, 0.42547, 0)
-shape = SubResource("BoxShape3D_edkwo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50607, 0.0511169)
+shape = SubResource("BoxShape3D_pde2e")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("2_fpv1m")]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.0834146, 0.294828, 0.583901)

@@ -9,7 +9,11 @@ var lane_index: int = -1
 
 func _ready():
 	add_to_group("poofable")
-
+	
+	
+func set_speed_multiplier(multiplier: float):
+	speed *= multiplier
+	
 func _physics_process(delta):
 	var forward = transform.basis.z.normalized()
 	var origin = global_transform.origin + Vector3(0, 0.5, 0)  # slightly above ground to avoid false negatives

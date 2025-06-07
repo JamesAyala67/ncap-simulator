@@ -1,12 +1,11 @@
-// CRT + Scanlines + CCTV Flicker Shader
-// Based on: https://www.shadertoy.com/view/Ms23DR
+// CRT + Scanlines + CCTV Flicker Shader (with clarity tweaks)
 shader_type canvas_item;
 
 uniform sampler2D screen_texture : hint_screen_texture, repeat_disable, filter_nearest;
 uniform float time;
+uniform float slowdown_intensity : hint_range(0.0, 1.0) = 0.0;
 
-vec2 curve(vec2 uv)
-{
+vec2 curve(vec2 uv) {
 	uv = (uv - 0.5) * 2.0;
 	uv *= 1.1;
 	uv.x *= 1.0 + pow((abs(uv.y) / 5.0), 2.0);
@@ -16,8 +15,7 @@ vec2 curve(vec2 uv)
 	return uv;
 }
 
-void fragment()
-{
+void fragment() {
 	vec2 iResolution = 1.0 / SCREEN_PIXEL_SIZE;
 	vec2 q = FRAGCOORD.xy / iResolution.xy;
 	vec2 uv = curve(q);
@@ -38,9 +36,9 @@ void fragment()
 
 	col = clamp(col * 0.6 + 0.4 * col * col * 1.0, 0.0, 1.0);
 
-	// Vignette
-	float vig = 16.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y);
-	col *= vec3(pow(vig, 0.3));
+	// Vignette (slightly softened)
+	float vig = 12.0 * uv.x * uv.y * (1.0 - uv.x) * (1.0 - uv.y);
+	col *= vec3(pow(vig, 0.25));
 
 	// Slight color tint + brightness boost
 	col *= vec3(0.95, 1.05, 0.95);
@@ -54,12 +52,21 @@ void fragment()
 	float comp = smoothstep(0.1, 0.9, sin(time));
 	col *= 0.95 + 0.05 * comp;
 
-	// Horizontal sync lines (emulates alternating pixel striping)
-	col *= 1.0 - 0.65 * vec3(clamp((mod(FRAGCOORD.x, 2.0) - 1.0) * 2.0, 0.0, 1.0));
+	// Horizontal sync lines (reduced darkness)
+	col *= 1.0 - 0.3 * vec3(clamp((mod(FRAGCOORD.x, 2.0) - 1.0) * 2.0, 0.0, 1.0));
 
-	// Scanline overlay (darkens alternating rows)
+	// Scanline overlay
 	float scan = sin(FRAGCOORD.y * 4.0 + time * 8.0) * 0.1;
+	float brightness = dot(col, vec3(0.299, 0.587, 0.114));
+	scan *= smoothstep(0.0, 0.8, 1.0 - brightness);
 	col -= vec3(scan);
+
+	// CRT power-on white flash
+	float startup_flash = clamp(1.0 - time * 1.5, 0.0, 1.0);
+	col = mix(vec3(1.0), col, 1.0 - startup_flash);
+
+	// Final clarity boost (very subtle)
+	col = mix(col, vec3(1.0), 0.05);
 
 	// Clamp & cleanup
 	col = clamp(col, 0.0, 1.0);

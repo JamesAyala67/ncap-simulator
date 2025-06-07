@@ -1,19 +1,18 @@
-[gd_scene load_steps=4 format=3 uid="uid://mswx7eaqggyd"]
+[gd_scene load_steps=4 format=3 uid="uid://br0d2v1oj3nxl"]
 
-[ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_dcnqq"]
-[ext_resource type="PackedScene" uid="uid://oks4rep2hhdv" path="res://assets/characters/Car 2/lowpoly_car_pack.glb" id="2_gjf4w"]
+[ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_gjf4w"]
+[ext_resource type="PackedScene" uid="uid://dr5ebgc2n6sd4" path="res://assets/characters/Car 3/Mercedes-Benz-GLS-580.glb" id="2_gjf4w"]
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_edkwo"]
-size = Vector3(0.83, 1.533, 7.5)
+[sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
+size = Vector3(0.85, 0.739699, 3.25)
 
-[node name="entity1" type="CharacterBody3D" groups=["poofable"]]
-transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
-script = ExtResource("1_dcnqq")
-category = "bus"
-
-[node name="Sketchfab_Scene" parent="." instance=ExtResource("2_gjf4w")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+[node name="Entity2" type="CharacterBody3D"]
+script = ExtResource("1_gjf4w")
+category = "private"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.861302, 0.000536919)
-shape = SubResource("BoxShape3D_edkwo")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.494544, 0.0511169)
+shape = SubResource("BoxShape3D_pde2e")
+
+[node name="Mercedes-Benz-GLS-580" parent="." instance=ExtResource("2_gjf4w")]
+transform = Transform3D(0.15, 0, 0, 0, 0.15, 0, 0, 0, 0.15, 0, 0, 0)
