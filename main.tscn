@@ -1,14 +1,72 @@
-[gd_scene load_steps=7 format=3 uid="uid://q67r6e6eok01"]
+[gd_scene load_steps=18 format=3 uid="uid://q67r6e6eok01"]
 
 [ext_resource type="PackedScene" uid="uid://7d3opusjinc6" path="res://assets/scenes/platform_scene.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://delqvwu2ejbs3" path="res://assets/scenes/entities/entity1.tscn" id="2_h2yge"]
 [ext_resource type="PackedScene" uid="uid://mswx7eaqggyd" path="res://assets/scenes/entities/entity2.tscn" id="3_lquwl"]
 [ext_resource type="Shader" uid="uid://bqxgb56fiqo2n" path="res://assets/scripts/CCTVShader.gdshader" id="4_1bvp3"]
+[ext_resource type="Shader" uid="uid://bshhv7t86s02l" path="res://assets/scripts/stylizedShader.gdshader" id="4_272bh"]
+[ext_resource type="Texture2D" uid="uid://daqjyopkud7m1" path="res://assets/images/Sun.png" id="5_5vw27"]
 [ext_resource type="Script" uid="uid://sjc741ekq31b" path="res://assets/scripts/main.gd" id="5_lquwl"]
+
+[sub_resource type="Curve" id="Curve_kek77"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.123431, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.735409), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_4c57u"]
+curve = SubResource("Curve_kek77")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_efxa6"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_dg77c"]
+seamless = true
+noise = SubResource("FastNoiseLite_efxa6")
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ycdy4"]
+seamless = true
+noise = SubResource("FastNoiseLite_efxa6")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w48qg"]
+shader = ExtResource("4_272bh")
+shader_parameter/cloud_shape_sampler = SubResource("NoiseTexture2D_dg77c")
+shader_parameter/cloud_noise_sampler = SubResource("NoiseTexture2D_dg77c")
+shader_parameter/cloud_curves = SubResource("CurveTexture_4c57u")
+shader_parameter/clouds_samples = 32
+shader_parameter/shadow_sample = 4
+shader_parameter/clouds_density = 0.4
+shader_parameter/clouds_scale = 1.0
+shader_parameter/clouds_smoothness = 0.03
+shader_parameter/clouds_light_color = Color(1, 1, 1, 1)
+shader_parameter/clouds_shadow_intensity = 1.0
+shader_parameter/high_clouds_sampler = SubResource("NoiseTexture2D_ycdy4")
+shader_parameter/high_clouds_density = 0.2
+shader_parameter/top_color = Color(0.34902, 0.588235, 1, 1)
+shader_parameter/bottom_color = Color(0, 0.329412, 0.968627, 1)
+shader_parameter/sun_scatter = Color(0.298039, 0.298039, 0.298039, 1)
+shader_parameter/astro_tint = Color(0.905882, 0.788235, 0.627451, 1)
+shader_parameter/astro_sampler = ExtResource("5_5vw27")
+shader_parameter/astro_scale = 3.0
+shader_parameter/astro_intensity = 3.0
+shader_parameter/stars_intensity = 0.0
+shader_parameter/shooting_stars_intensity = 0.0
+shader_parameter/shooting_star_tint = Color(0, 0, 0, 1)
+
+[sub_resource type="Sky" id="Sky_vivmo"]
+sky_material = SubResource("ShaderMaterial_w48qg")
+
+[sub_resource type="Environment" id="Environment_2cqfq"]
+background_mode = 2
+sky = SubResource("Sky_vivmo")
+tonemap_mode = 2
+glow_enabled = true
+adjustment_enabled = true
+adjustment_brightness = 1.25
+adjustment_saturation = 1.5
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_lquwl"]
 shader = ExtResource("4_1bvp3")
 shader_parameter/time = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_lquwl"]
 
 [node name="main" type="Node3D"]
 script = ExtResource("5_lquwl")
@@ -17,6 +75,9 @@ spawn_speed = 8.0
 speed_increment = 1.5
 spawn_entities = Array[PackedScene]([ExtResource("3_lquwl"), ExtResource("2_h2yge")])
 spawn_points_group = NodePath("spawnpoints")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2cqfq")
 
 [node name="spawnpoints" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -31.6306)
@@ -50,7 +111,7 @@ current = true
 fov = 27.0
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(0.173648, 0.254887, -0.951251, 0, 0.965926, 0.258819, 0.984808, -0.0449434, 0.167731, -19.4089, 9.08284, 0)
+transform = Transform3D(0.166923, 0.511228, -0.843079, -0.047858, 0.858269, 0.510964, 0.984808, -0.0449434, 0.167731, -19.4089, 46.9396, 0)
 light_color = Color(0.62, 0.905, 1, 1)
 light_angular_distance = 15.0
 light_specular = 3.5
@@ -92,3 +153,11 @@ offset_bottom = 58.0
 grow_horizontal = 0
 scale = Vector2(1.25, 1.25)
 horizontal_alignment = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(10, 0, 0, 0, -4.37114e-08, -10, 0, 1, -4.37114e-07, 0, 8.23572, -32.2358)
+mesh = SubResource("PlaneMesh_lquwl")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(-1.09278e-06, 1, -4.37114e-07, 0, -4.37114e-08, -10, -25, -4.37114e-08, 1.91069e-14, -7.28176, 8.23572, -7.81996)
+mesh = SubResource("PlaneMesh_lquwl")

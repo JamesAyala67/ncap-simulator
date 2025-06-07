@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://clsmafojkfoea"]
 
-[ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/movement.gd" id="1_fpv1m"]
+[ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_fpv1m"]
 [ext_resource type="PackedScene" uid="uid://c7skkvox23tem" path="res://assets/characters/Car 1/low-poly_cartoon_style_car_03.glb" id="2_mu7yl"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_edkwo"]
