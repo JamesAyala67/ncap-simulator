@@ -12,10 +12,17 @@ extends Node3D
 @export var lane_categories: Array[String] = ["commuter", "bus", "motorcycle"]  # Index must match spawn points
 
 var spawn_points: Array[Marker3D] = []
+var lives: int = 3
 var combo_counter: int = 0
+var highest_combo: int = 0
+var lane_category_mapping: Dictionary = {}
+var game_over: bool = false
 
 func _ready():
 	randomize()
+	randomize()
+	for i in range(lane_categories.size()):
+		lane_category_mapping[i] = lane_categories[i]
 	var group_node = get_node_or_null(spawn_points_group)
 	if group_node:
 		for child in group_node.get_children():
@@ -94,13 +101,26 @@ func _on_speed_timer():
 	timer.wait_time = spawn_interval
 
 func on_entity_clicked(entity):
-	if entity.lane_index not in default_spawn_indexes:
+	if game_over:
+		return
+
+	var expected_category = ""
+	if lane_category_mapping.has(entity.lane_index):
+		expected_category = lane_category_mapping[entity.lane_index]
+
+	if entity.category != expected_category:
 		entity.queue_free()
 		combo_counter += 1
-		print("Combo +1! Current combo:", combo_counter)
+		if combo_counter > highest_combo:
+			highest_combo = combo_counter
+		print("Correct! Combo:", combo_counter)
 	else:
-		print("Wrong entity - in default lane. No combo.")
-		# Optional: combo_counter = 0  # reset combo if needed
+		combo_counter = 0
+		lives -= 1
+		print("Wrong! Lives left:", lives)
+		if lives <= 0:
+			_end_game()
+	_update_ui()
 		
 func _process(delta):
 	var color_rect = $CanvasLayer/ColorRect
@@ -140,3 +160,25 @@ func _unhandled_input(event):
 			var clicked = result.collider
 			if clicked and clicked.is_in_group("poofable"):
 				clicked.call_deferred("go_poof")
+				
+func _update_ui():
+	if $CanvasLayer.has_node("ComboLabel"):
+		$CanvasLayer/ComboLabel.text = "Combo: %d" % combo_counter
+	if $CanvasLayer.has_node("LivesLabel"):
+		$CanvasLayer/LivesLabel.text = "Lives: %d" % lives
+		
+func _end_game():
+	game_over = true
+	print("\n--- GAME OVER ---")
+	print("Final Score: ", combo_counter)
+	print("Highest Combo: ", highest_combo)
+
+	# Optional: stop spawning
+	var spawn_timer = get_node_or_null("SpawnTimer")
+	if spawn_timer:
+		spawn_timer.stop()
+
+	# Optional: Show game over UI
+	if $CanvasLayer.has_node("GameOverLabel"):
+		$CanvasLayer/GameOverLabel.text = "GAME OVER\nScore: %d\nBest Combo: %d" % [combo_counter, highest_combo]
+		$CanvasLayer/GameOverLabel.visible = true
