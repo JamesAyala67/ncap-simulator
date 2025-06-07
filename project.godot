@@ -17,8 +17,8 @@ config/icon="res://icon.svg"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/road-generator/plugin.cfg")
+enabled=PackedStringArray("res://addons/godot_3d_auto_collision_generator/plugin.cfg", "res://addons/road-generator/plugin.cfg")
 
 [global_group]
 
-poofable=""
+Poofable="for entities that are clickable"

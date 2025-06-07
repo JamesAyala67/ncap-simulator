@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_edkwo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_edkwo"]
-size = Vector3(0.83, 0.75, 1)
+size = Vector3(1.05, 0.85, 4)
 
 [node name="entity1" type="CharacterBody3D" groups=["poofable"]]
 script = ExtResource("1_edkwo")
@@ -12,5 +12,5 @@ script = ExtResource("1_edkwo")
 [node name="Car" parent="." instance=ExtResource("1_7lhlj")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00527692, 0.42547, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0114324, 0.482623, 0.0767205)
 shape = SubResource("BoxShape3D_edkwo")

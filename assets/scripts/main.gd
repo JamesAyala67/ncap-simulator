@@ -9,6 +9,7 @@ extends Node3D
 @export var spawn_points_group: NodePath = "SpawnPoints"
 @export var default_spawn_indexes: Array[int] = [0, 1]
 @export var random_spawn_chance: float = 0.35
+@export var lane_categories: Array[String] = ["commuter", "bus", "motorcycle"]  # Index must match spawn points
 
 var spawn_points: Array[Marker3D] = []
 var combo_counter: int = 0
@@ -59,16 +60,30 @@ func _on_spawn_timer():
 				_spawn_entity_at(spawn_points[idx])
 
 func _spawn_entity_at(spawn_point: Marker3D):
+	var space_state = get_world_3d().direct_space_state
+	var origin = spawn_point.global_transform.origin + Vector3(0, 0.5, 0)
+	var to = origin + Vector3(0, 0, 1) * 2.0
+
+	var ray_params = PhysicsRayQueryParameters3D.new()
+	ray_params.from = origin
+	ray_params.to = to
+	ray_params.collide_with_areas = false
+	ray_params.collide_with_bodies = true
+
+	var result = space_state.intersect_ray(ray_params)
+	if result and result.collider.is_in_group("poofable"):
+		print("Spawn blocked by nearby entity.")
+		return  # Avoid overlapping spawn
+
+	# Proceed with spawning any entity
 	var entity_scene = spawn_entities.pick_random()
 	var entity = entity_scene.instantiate()
 	entity.global_transform = spawn_point.global_transform
 
 	var randomized_speed = spawn_speed + randf_range(-spawn_speed_variance, spawn_speed_variance)
-	entity.set("speed", max(randomized_speed, 0.1))
+	entity.speed = max(randomized_speed, 0.1)
 
-	# Set lane index on entity (used for click check)
 	entity.lane_index = spawn_points.find(spawn_point)
-
 
 	add_child(entity)
 
@@ -103,21 +118,25 @@ func _process(delta):
 
 func _unhandled_input(event):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		var camera = $Camera3D  # Adjust path if needed
-		
+		# Ensure CanvasLayer UI allows input passthrough
+		for node in $CanvasLayer.get_children():
+			if node.has_method("set_mouse_filter"):
+				node.mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+		var camera = $Camera3D  # Adjust if path differs
 		var from = camera.project_ray_origin(event.position)
 		var to = from + camera.project_ray_normal(event.position) * 100
-		
+
 		var ray_params = PhysicsRayQueryParameters3D.new()
 		ray_params.from = from
 		ray_params.to = to
 		ray_params.collide_with_areas = true
 		ray_params.collide_with_bodies = true
-		
+
 		var space_state = get_world_3d().direct_space_state
 		var result = space_state.intersect_ray(ray_params)
-		
+
 		if result:
 			var clicked = result.collider
-			if clicked.is_in_group("poofable"):
+			if clicked and clicked.is_in_group("poofable"):
 				clicked.call_deferred("go_poof")
