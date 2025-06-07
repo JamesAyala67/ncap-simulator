@@ -6,7 +6,7 @@
 [sub_resource type="BoxShape3D" id="BoxShape3D_edkwo"]
 size = Vector3(0.83, 0.75, 1)
 
-[node name="entity1" type="CharacterBody3D"]
+[node name="entity1" type="CharacterBody3D" groups=["poofable"]]
 script = ExtResource("1_dcnqq")
 
 [node name="Car" parent="." instance=ExtResource("2_gjf4w")]
