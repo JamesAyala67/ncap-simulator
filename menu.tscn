@@ -170,6 +170,7 @@ scale = Vector2(0.375, 0.375)
 texture_normal = ExtResource("7_ecwwl")
 
 [node name="PopupImage" type="TextureRect" parent="MenuCanvas/Panel"]
+layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
