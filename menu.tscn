@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3 uid="uid://y72hi8cfk6qh"]
 
 [ext_resource type="Script" uid="uid://bmqt7fslvecln" path="res://assets/scripts/menu.gd" id="1_4hy44"]
-[ext_resource type="PackedScene" uid="uid://di6ctisd5700k" path="res://assets/textures/Office.glb" id="1_lti8b"]
+[ext_resource type="PackedScene" uid="uid://cvbi7anramml3" path="res://assets/textures/Office.glb" id="1_lti8b"]
 [ext_resource type="Shader" uid="uid://cdg1md31hj7yk" path="res://menu.gdshader" id="2_mae5d"]
 [ext_resource type="Texture2D" uid="uid://c62odai2unvuo" path="res://assets/images/title.png" id="2_ouk20"]
 
@@ -38,14 +38,14 @@ script = ExtResource("1_4hy44")
 environment = SubResource("Environment_l48gv")
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, 5.5, 4.35, -11.5)
+transform = Transform3D(-0.774168, -0.00530641, 0.632958, 0.00525194, 0.999877, 0.0148061, -0.632959, 0.0147867, -0.774045, 5.5, 7.89276, -11.5)
 fov = 60.0
 
 [node name="Office" parent="." instance=ExtResource("1_lti8b")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6.5, 1.6387)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1.7736, -0.438265, 0.0357359, 0, 0.0871558, 0.928453, -0.86888, -0.89461, 0.0729461, -0.562001, 4.81561, -2.30937)
+transform = Transform3D(-1.58844, -0.592, 0.0482714, 1.30808e-08, 0.0871558, 0.928453, -1.17366, 0.801211, -0.0653304, 7.38651, 6.9028, -14.7778)
 material_override = SubResource("StandardMaterial3D_ecwwl")
 mesh = SubResource("PlaneMesh_kk3ma")
 
@@ -61,12 +61,14 @@ grow_vertical = 2
 color = Color(0, 0, 0, 0.25098)
 
 [node name="TitleLabel" type="TextureRect" parent="MenuCanvas/Panel"]
+layout_mode = 0
 offset_left = 50.0
 offset_right = 550.0
 offset_bottom = 500.0
 texture = ExtResource("2_ouk20")
 
 [node name="StartButton" type="Button" parent="MenuCanvas/Panel"]
+layout_mode = 0
 offset_left = 243.0
 offset_top = 347.0
 offset_right = 346.0
@@ -74,6 +76,7 @@ offset_bottom = 378.0
 text = "Start Button"
 
 [node name="Tutorial Button" type="Button" parent="MenuCanvas/Panel"]
+layout_mode = 0
 offset_left = 232.0
 offset_top = 391.0
 offset_right = 358.0
@@ -81,6 +84,7 @@ offset_bottom = 422.0
 text = "Tutorial Button"
 
 [node name="ExitButton" type="Button" parent="MenuCanvas/Panel"]
+layout_mode = 0
 offset_left = 243.0
 offset_top = 492.0
 offset_right = 337.0
@@ -88,6 +92,7 @@ offset_bottom = 523.0
 text = "Exit Button"
 
 [node name="SettingsButton" type="Button" parent="MenuCanvas/Panel"]
+layout_mode = 0
 offset_left = 229.0
 offset_top = 443.0
 offset_right = 357.0
