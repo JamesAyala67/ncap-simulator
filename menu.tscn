@@ -44,6 +44,15 @@ fov = 60.0
 [node name="Office" parent="." instance=ExtResource("1_lti8b")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6.5, 1.6387)
 
+[node name="SpotLight3D" type="SpotLight3D" parent="Office"]
+transform = Transform3D(1, 8.74127e-08, 8.87486e-08, -8.74127e-08, -0.0151663, 0.999885, 8.87487e-08, -0.999885, -0.0151663, 11.6495, 11.1478, 10.9302)
+light_energy = 16.0
+light_indirect_energy = 16.0
+light_volumetric_fog_energy = 1.155
+spot_range = 4096.0
+spot_attenuation = 0.8
+spot_angle = 61.36
+
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(-1.58844, -0.592, 0.0482714, 1.30808e-08, 0.0871558, 0.928453, -1.17366, 0.801211, -0.0653304, 7.38651, 6.9028, -14.7778)
 material_override = SubResource("StandardMaterial3D_ecwwl")
