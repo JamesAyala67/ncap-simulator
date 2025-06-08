@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://q67r6e6eok01"]
+[gd_scene load_steps=28 format=3 uid="uid://q67r6e6eok01"]
 
 [ext_resource type="PackedScene" uid="uid://7d3opusjinc6" path="res://assets/scenes/platform_scene.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://tysbdpscvwjy" path="res://assets/scenes/entities/entity1.tscn" id="2_7mycd"]
@@ -14,6 +14,7 @@
 [ext_resource type="Texture2D" uid="uid://xhsprx5a2j8j" path="res://assets/images/clock-svgrepo-com.svg" id="12_dg77c"]
 [ext_resource type="Script" uid="uid://cfo757aqcqhta" path="res://assets/scripts/DespawnZone.gd" id="13_ycdy4"]
 [ext_resource type="AudioStream" uid="uid://dsmwofubxd3lf" path="res://assets/audio/video-game-boss-fiight-259885.mp3" id="14_vivmo"]
+[ext_resource type="AudioStream" uid="uid://sjlcba75nt8g" path="res://assets/audio/city-ambience-9271.mp3" id="15_vivmo"]
 
 [sub_resource type="Curve" id="Curve_272bh"]
 _data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.118852, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.735409), 0.0, 0.0, 0, 0]
@@ -88,13 +89,14 @@ spawn_entities = Array[PackedScene]([ExtResource("6_4c57u"), ExtResource("2_7myc
 spawn_points_group = NodePath("spawnpoints")
 default_spawn_indexes = Array[int]([0, 1, 1, 2, 2, 4])
 lane_categories = Array[String](["bus", "private", "private", "motorcycle", "commuter", "commuter"])
-master_volume = 0.1
+music_volume = 0.05
+ambient_music_volume = 0.15
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_vivmo")
 
 [node name="spawnpoints" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.308118, -62.2526)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.308118, -65.3669)
 
 [node name="spawnpoint1" type="Marker3D" parent="spawnpoints"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.4575, 0, 0)
@@ -275,6 +277,10 @@ shape = SubResource("BoxShape3D_ycdy4")
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("14_vivmo")
 parameters/looping = true
+
+[node name="AmbientPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("15_vivmo")
+bus = &"Ambient"
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.09431, -2.44317)

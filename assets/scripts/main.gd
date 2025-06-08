@@ -13,10 +13,13 @@ extends Node3D
 @export var slowdown_combo_threshold: int = 15
 @export var slowdown_multiplier: float = 0.5
 @export var slowdown_duration: float = 3.0
-@onready var music_player: AudioStreamPlayer = $MusicPlayer
+@onready var music_player = $MusicPlayer
+@onready var music_overlay = $AmbientPlayer
 @export var master_volume := 1.0
 @export var music_volume := 1.0
 @export var sfx_volume := 1.0
+@export var ambient_music_volume := 1.0
+
 
 
 var spawn_points: Array[Marker3D] = []
@@ -56,6 +59,7 @@ var entity_lane_preferences: Dictionary = {
 
 func _ready():
 	randomize()
+	
 	for i in range(lane_categories.size()):
 		lane_category_mapping[i] = lane_categories[i]
 
@@ -65,11 +69,13 @@ func _ready():
 			if child is Marker3D:
 				spawn_points.append(child as Marker3D)
 
+	call_deferred("apply_all_volumes")
 	_start_spawn_timer()
 	_start_speed_timer()
 	apply_all_volumes()  # 👈 Add this
 	_update_ui()
 	_fade_in_music()
+	_fade_in_overlay()
 	$CanvasLayer/SlowdownButton.pressed.connect(_on_slowdown_button_pressed)
 func _start_spawn_timer():
 	var timer = Timer.new()
@@ -437,28 +443,32 @@ func _fade_in_music():
 	if not music_player:
 		push_error("MusicPlayer not found.")
 		return
-	
-	var start_volume := -80.0  # silent
-	var target_volume := 0.0   # full volume
-	var fade_duration := 4.0   # in seconds
 
-	music_player.volume_db = start_volume
+	music_player.volume_db = -80.0  # start silent
 	music_player.play()
 
-	var tween := create_tween()
-	tween.tween_property(music_player, "volume_db", target_volume, fade_duration)
-
+	var tween = create_tween()
+	tween.tween_property(music_player, "volume_db", linear_to_db(music_volume), 4.0)
+	
 func set_volume(bus_name: String, linear_value: float) -> void:
 	var db := linear_to_db(linear_value)
 	var bus_index := AudioServer.get_bus_index(bus_name)
-	if bus_index != -1:
+	if bus_index == -1:
+		push_error("Audio bus '%s' not found!" % bus_name)
+	else:
 		AudioServer.set_bus_volume_db(bus_index, db)
-
+		
 func apply_all_volumes():
 	set_volume("Master", master_volume)
 	set_volume("Music", music_volume)
 	set_volume("SFX", sfx_volume)
+	set_volume("Ambient", ambient_music_volume)
 
+	# Manually set volume on audio players if not routed through AudioServer buses
+	if music_player:
+		music_player.volume_db = linear_to_db(music_volume)
+	if music_overlay:
+		music_overlay.volume_db = linear_to_db(ambient_music_volume)
 func linear_to_db(value: float) -> float:
 	if value <= 0.001:
 		return -80.0
@@ -473,3 +483,13 @@ func _on_restart_pressed() -> void:
 
 func _on_exit_pressed() -> void:
 	get_tree().change_scene_to_file("res://menu.tscn") # Replace with function body.
+
+func set_music_volume_linear(music_val: float, ambient_val: float):
+	music_player.volume_db = linear_to_db(music_val)
+	music_overlay.volume_db = linear_to_db(ambient_val)
+
+func _fade_in_overlay():
+	if music_overlay:
+		music_overlay.volume_db = -80.0
+		music_overlay.play()
+		create_tween().tween_property(music_overlay, "volume_db", linear_to_db(ambient_music_volume), 4.0)

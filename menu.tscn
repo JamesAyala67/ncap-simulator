@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://y72hi8cfk6qh"]
+[gd_scene load_steps=12 format=3 uid="uid://y72hi8cfk6qh"]
 
 [ext_resource type="Script" uid="uid://bmqt7fslvecln" path="res://assets/scripts/menu.gd" id="1_4hy44"]
 [ext_resource type="PackedScene" uid="uid://cvbi7anramml3" path="res://assets/textures/Office.glb" id="1_lti8b"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://i5p4rd2070ho" path="res://assets/images/tutorial.png" id="5_ecwwl"]
 [ext_resource type="Texture2D" uid="uid://c5ypc1j87p02f" path="res://assets/images/credits.png" id="6_kk3ma"]
 [ext_resource type="Texture2D" uid="uid://ccwyykm0m1ob4" path="res://assets/images/exit.png" id="7_ecwwl"]
+[ext_resource type="AudioStream" uid="uid://dq6pcsnxb65gu" path="res://assets/audio/jungle-ish-beat-for-video-games-314073.mp3" id="8_kk3ma"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hy44"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -26,6 +27,7 @@ glow_blend_mode = 1
 
 [node name="Menu" type="Node3D"]
 script = ExtResource("1_4hy44")
+menu_volume_percent = 30
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_l48gv")
@@ -170,3 +172,9 @@ texture_normal = ExtResource("7_ecwwl")
 [node name="PopupImage" type="TextureRect" parent="MenuCanvas/Panel"]
 offset_right = 40.0
 offset_bottom = 40.0
+
+[node name="MenuOST" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_kk3ma")
+autoplay = true
+bus = &"MenuOST"
+parameters/looping = true
