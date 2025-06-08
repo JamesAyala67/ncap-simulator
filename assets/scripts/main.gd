@@ -13,6 +13,11 @@ extends Node3D
 @export var slowdown_combo_threshold: int = 15
 @export var slowdown_multiplier: float = 0.5
 @export var slowdown_duration: float = 3.0
+@onready var music_player: AudioStreamPlayer = $MusicPlayer
+@export var master_volume := 1.0
+@export var music_volume := 1.0
+@export var sfx_volume := 1.0
+
 
 var spawn_points: Array[Marker3D] = []
 var lives: int = 3
@@ -30,6 +35,8 @@ var slowdown_cooldown_time_left: float = 0.0
 const SLOWDOWN_COOLDOWN_TIME: float = 7.0
 var slowdown_reactivation_combo: int = 0  # combo needed after cooldown
 
+
+
 var point_values := {
 	"motorcycle": 7,
 	"commuter": 3,
@@ -39,10 +46,10 @@ var point_values := {
 }
 
 var entity_lane_preferences: Dictionary = {
-	"motorcycle": [2] as Array[int],
-	"commuter": [0, 1] as Array[int],
-	"private": [3, 4] as Array[int],
-	"bus": [5] as Array[int],
+	"motorcycle": [3] as Array[int],
+	"commuter": [4, 5] as Array[int],
+	"private": [1, 2] as Array[int],
+	"bus": [0] as Array[int],
 	"airplane": [] as Array[int]
 }
 
@@ -60,9 +67,10 @@ func _ready():
 
 	_start_spawn_timer()
 	_start_speed_timer()
-	_update_ui()  # initialize UI values
+	apply_all_volumes()  # 👈 Add this
+	_update_ui()
+	_fade_in_music()
 	$CanvasLayer/SlowdownButton.pressed.connect(_on_slowdown_button_pressed)
-
 func _start_spawn_timer():
 	var timer = Timer.new()
 	timer.name = "SpawnTimer"
@@ -274,18 +282,25 @@ func _update_ui():
 func _end_game():
 	game_over = true
 	print("\n--- GAME OVER ---")
-	print("Final Score: ", combo_counter)
+	print("Final Score: ", score)
 	print("Highest Combo: ", highest_combo)
-	
-	# Optional: stop spawning
+
+	# Stop spawn timer
 	var spawn_timer = get_node_or_null("SpawnTimer")
 	if spawn_timer:
 		spawn_timer.stop()
-	
-	# Optional: Show game over UI
-	if $CanvasLayer.has_node("GameOverLabel"):
-		$CanvasLayer/GameOverLabel.text = "GAME OVER\nScore: %d\nBest Combo: %d" % [combo_counter, highest_combo]
-		$CanvasLayer/GameOverLabel.visible = true
+
+	# Hide gameplay UI
+	$CanvasLayer/ComboLabel.visible = false
+	$CanvasLayer/LivesLabel.visible = false
+	$CanvasLayer/ScoreLabel.visible = false
+	$CanvasLayer/ComboMeter.visible = false
+	$CanvasLayer/SlowdownButton.visible = false
+
+	# Show GameOver UI
+	$CanvasLayer/GameOverMenu.visible = true
+	$CanvasLayer/GameOverMenu/VBoxContainer/GameOverLabel.text = "GAME OVER\nScore: %d\nBest Combo: %d" % [score, highest_combo]
+
 		
 func show_point_popup(world_position: Vector3, points: int, is_penalty: bool):
 	var popup = Label.new()
@@ -406,7 +421,7 @@ func _on_slowdown_cooldown_finished():
 		can_use_slowdown = true
 		$CanvasLayer/SlowdownButton.disabled = false
 
-func _on_wrong_lane_entity_exit():
+func _on_wrong_lane_entity_exit(body):
 	if game_over:
 		return
 	lives -= 1
@@ -417,3 +432,44 @@ func _on_wrong_lane_entity_exit():
 		
 func get_expected_lanes_for_category(category: String) -> Array[int]:
 		return entity_lane_preferences.get(category, [])
+
+func _fade_in_music():
+	if not music_player:
+		push_error("MusicPlayer not found.")
+		return
+	
+	var start_volume := -80.0  # silent
+	var target_volume := 0.0   # full volume
+	var fade_duration := 4.0   # in seconds
+
+	music_player.volume_db = start_volume
+	music_player.play()
+
+	var tween := create_tween()
+	tween.tween_property(music_player, "volume_db", target_volume, fade_duration)
+
+func set_volume(bus_name: String, linear_value: float) -> void:
+	var db := linear_to_db(linear_value)
+	var bus_index := AudioServer.get_bus_index(bus_name)
+	if bus_index != -1:
+		AudioServer.set_bus_volume_db(bus_index, db)
+
+func apply_all_volumes():
+	set_volume("Master", master_volume)
+	set_volume("Music", music_volume)
+	set_volume("SFX", sfx_volume)
+
+func linear_to_db(value: float) -> float:
+	if value <= 0.001:
+		return -80.0
+	return 20.0 * log(value) / log(10.0)
+
+func db_to_linear(db: float) -> float:
+	return pow(10, db / 20.0)
+
+func _on_restart_pressed() -> void:
+	get_tree().reload_current_scene() # Replace with function body.
+
+
+func _on_exit_pressed() -> void:
+	get_tree().change_scene_to_file("res://menu.tscn") # Replace with function body.

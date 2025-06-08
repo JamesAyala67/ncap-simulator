@@ -2,8 +2,11 @@
 
 [ext_resource type="Script" uid="uid://bmqt7fslvecln" path="res://assets/scripts/menu.gd" id="1_4hy44"]
 [ext_resource type="PackedScene" uid="uid://cvbi7anramml3" path="res://assets/textures/Office.glb" id="1_lti8b"]
-[ext_resource type="Shader" uid="uid://cdg1md31hj7yk" path="res://menu.gdshader" id="2_mae5d"]
 [ext_resource type="Texture2D" uid="uid://c62odai2unvuo" path="res://assets/images/title.png" id="2_ouk20"]
+[ext_resource type="Texture2D" uid="uid://bkvegwk3m6e42" path="res://assets/images/start.png" id="4_l48gv"]
+[ext_resource type="Texture2D" uid="uid://i5p4rd2070ho" path="res://assets/images/tutorial.png" id="5_ecwwl"]
+[ext_resource type="Texture2D" uid="uid://c5ypc1j87p02f" path="res://assets/images/credits.png" id="6_kk3ma"]
+[ext_resource type="Texture2D" uid="uid://ccwyykm0m1ob4" path="res://assets/images/exit.png" id="7_ecwwl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hy44"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -19,23 +22,90 @@ tonemap_mode = 2
 glow_enabled = true
 glow_levels/3 = 4.29
 glow_levels/5 = 6.39
-glow_intensity = 1.5
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ecwwl"]
-emission_enabled = true
-emission = Color(0.7, 0.8, 1, 1)
-emission_energy_multiplier = 5.0
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_kk3ma"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_4hy44"]
-shader = ExtResource("2_mae5d")
+glow_blend_mode = 1
 
 [node name="Menu" type="Node3D"]
 script = ExtResource("1_4hy44")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_l48gv")
+
+[node name="Light" type="Node3D" parent="."]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.13862, 4.72494, -3.46147)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.5
+
+[node name="OmniLight3D5" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.128, 4.725, -3.286)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.5
+
+[node name="OmniLight3D6" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.639, 4.725, -3.286)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.5
+
+[node name="OmniLight3D7" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.538, 4.725, -2.541)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.5
+
+[node name="OmniLight3D8" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.4606, 9.527, -2.53)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D9" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.8526, 9.527, -2.485)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D10" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -20.339, 9.527, -2.625)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D11" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.2631, 9.527, -2.45)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D12" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.267, 9.527, -2.45)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D13" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.318, 9.527, -2.46)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D14" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.616, 9.527, -2.88)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D15" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.005, 9.527, -2.75)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 4.0
+
+[node name="OmniLight3D4" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.123, 4.885, -2.961)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.75
+
+[node name="OmniLight3D3" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.091, 4.725, -3.096)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.5
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="Light"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.1851, 4.72494, -3.50198)
+light_color = Color(1, 0.7, 0.7, 1)
+light_energy = 2.5
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(-0.774168, -0.00530641, 0.632958, 0.00525194, 0.999877, 0.0148061, -0.632959, 0.0147867, -0.774045, 5.5, 7.89276, -11.5)
@@ -44,24 +114,9 @@ fov = 60.0
 [node name="Office" parent="." instance=ExtResource("1_lti8b")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6.5, 1.6387)
 
-[node name="SpotLight3D" type="SpotLight3D" parent="Office"]
-transform = Transform3D(1, 8.74127e-08, 8.87486e-08, -8.74127e-08, -0.0151663, 0.999885, 8.87487e-08, -0.999885, -0.0151663, 11.6495, 11.1478, 10.9302)
-light_energy = 16.0
-light_indirect_energy = 16.0
-light_volumetric_fog_energy = 1.155
-spot_range = 4096.0
-spot_attenuation = 0.8
-spot_angle = 61.36
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(-1.58844, -0.592, 0.0482714, 1.30808e-08, 0.0871558, 0.928453, -1.17366, 0.801211, -0.0653304, 7.38651, 6.9028, -14.7778)
-material_override = SubResource("StandardMaterial3D_ecwwl")
-mesh = SubResource("PlaneMesh_kk3ma")
-
 [node name="MenuCanvas" type="CanvasLayer" parent="."]
 
 [node name="Panel" type="ColorRect" parent="MenuCanvas"]
-material = SubResource("ShaderMaterial_4hy44")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -76,41 +131,42 @@ offset_right = 550.0
 offset_bottom = 500.0
 texture = ExtResource("2_ouk20")
 
-[node name="StartButton" type="Button" parent="MenuCanvas/Panel"]
+[node name="StartButton" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
-offset_left = 243.0
-offset_top = 347.0
-offset_right = 346.0
-offset_bottom = 378.0
-text = "Start Button"
+offset_left = 173.755
+offset_top = 336.0
+offset_right = 536.755
+offset_bottom = 454.0
+scale = Vector2(0.3, 0.3)
+texture_normal = ExtResource("4_l48gv")
 
-[node name="Tutorial Button" type="Button" parent="MenuCanvas/Panel"]
+[node name="Tutorial Button" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
-offset_left = 232.0
-offset_top = 391.0
-offset_right = 358.0
-offset_bottom = 422.0
-text = "Tutorial Button"
+offset_left = 173.755
+offset_top = 379.0
+offset_right = 587.755
+offset_bottom = 475.0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("5_ecwwl")
 
-[node name="ExitButton" type="Button" parent="MenuCanvas/Panel"]
+[node name="CreditButton" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
-offset_left = 243.0
-offset_top = 492.0
-offset_right = 337.0
-offset_bottom = 523.0
-text = "Exit Button"
+offset_left = 173.755
+offset_top = 424.0
+offset_right = 495.755
+offset_bottom = 522.0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("6_kk3ma")
 
-[node name="SettingsButton" type="Button" parent="MenuCanvas/Panel"]
+[node name="ExitButton" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
-offset_left = 229.0
-offset_top = 443.0
-offset_right = 357.0
-offset_bottom = 474.0
-text = "Settings Button"
+offset_left = 173.755
+offset_top = 470.0
+offset_right = 421.755
+offset_bottom = 565.0
+scale = Vector2(0.375, 0.375)
+texture_normal = ExtResource("7_ecwwl")
 
-[node name="SpotLight3D" type="SpotLight3D" parent="."]
-transform = Transform3D(0.9026, 0, 0.43048, 0, 1, 0, -0.43048, 0, 0.9026, -0.464109, 4.60697, -2.50512)
-light_color = Color(0.678431, 0.847059, 0.901961, 1)
-light_energy = 2.0
-shadow_enabled = true
-spot_angle = 40.6796
+[node name="PopupImage" type="TextureRect" parent="MenuCanvas/Panel"]
+offset_right = 40.0
+offset_bottom = 40.0
