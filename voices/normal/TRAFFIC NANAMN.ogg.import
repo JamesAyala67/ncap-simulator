@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://chv3vsa5ecniy"
+path="res://.godot/imported/TRAFFIC NANAMN.ogg-665d3b9d0595e8d965593ce5c77ee105.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/TRAFFIC NANAMN.ogg"
+dest_files=["res://.godot/imported/TRAFFIC NANAMN.ogg-665d3b9d0595e8d965593ce5c77ee105.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

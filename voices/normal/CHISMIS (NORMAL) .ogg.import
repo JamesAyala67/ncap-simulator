@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://d0ec26j53oqmp"
+path="res://.godot/imported/CHISMIS (NORMAL) .ogg-1595b4399c3debc4e57c8657c70e500a.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/CHISMIS (NORMAL) .ogg"
+dest_files=["res://.godot/imported/CHISMIS (NORMAL) .ogg-1595b4399c3debc4e57c8657c70e500a.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

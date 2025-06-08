@@ -15,6 +15,10 @@ run/main_scene="uid://y72hi8cfk6qh"
 config/features=PackedStringArray("4.4", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+VoiceManager="*res://assets/scripts/VoiceManager.gd"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/godot_3d_auto_collision_generator/plugin.cfg", "res://addons/road-generator/plugin.cfg")

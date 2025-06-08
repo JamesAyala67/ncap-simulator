@@ -4,15 +4,15 @@
 [ext_resource type="PackedScene" uid="uid://oks4rep2hhdv" path="res://assets/characters/Car 2/lowpoly_car_pack.glb" id="2_ghnp5"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
-size = Vector3(0.875, 0.721965, 3.5)
+size = Vector3(1.5, 1, 5.9)
 
 [node name="Entity3" type="CharacterBody3D"]
 script = ExtResource("1_awrot")
 category = "private"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.453407, 0.0511169)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.642138, 0.0511169)
 shape = SubResource("BoxShape3D_pde2e")
 
 [node name="Sketchfab_Scene2" parent="." instance=ExtResource("2_ghnp5")]
-transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.416299, 0)
+transform = Transform3D(-0.9, 0, -7.86805e-08, 0, 0.9, 0, 7.86805e-08, 0, -0.9, 0, 0.677619, 0)

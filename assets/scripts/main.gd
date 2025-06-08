@@ -1,10 +1,10 @@
 extends Node3D
 
-@export var spawn_interval: float = 2.5         # Starts easy (slower spawns)
+@export var spawn_interval: float = 1.2         # Faster initial spawn
 @export var min_spawn_interval: float = 0.5     # Still speeds up over time, but not too fast
-@export var spawn_speed: float = 3.0            # Starts slower
+@export var spawn_speed: float = 4.5            # Faster initial movement
 @export var speed_increment: float = 0.5        # Gradual increase
-@export var spawn_speed_variance: float = 1.0   # Less speed randomness at start
+@export var spawn_speed_variance: float = 1.5   # More variation at start
 @export var spawn_entities: Array[PackedScene]
 @export var spawn_points_group: NodePath = "SpawnPoints"
 @export var default_spawn_indexes: Array[int] = [0, 1]
@@ -49,17 +49,16 @@ var point_values := {
 }
 
 var entity_lane_preferences: Dictionary = {
-	"motorcycle": [3] as Array[int],
-	"commuter": [4, 5] as Array[int],
-	"private": [1, 2] as Array[int],
-	"bus": [0] as Array[int],
-	"airplane": [] as Array[int]
+	"motorcycle": [3],
+	"commuter": [4, 5],
+	"private": [1, 2],
+	"bus": [0]
 }
 
 
 func _ready():
 	randomize()
-	
+
 	for i in range(lane_categories.size()):
 		lane_category_mapping[i] = lane_categories[i]
 
@@ -69,14 +68,21 @@ func _ready():
 			if child is Marker3D:
 				spawn_points.append(child as Marker3D)
 
+	if spawn_points.size() == 0:
+		push_error("No spawn points found! Check your scene setup.")
+
 	call_deferred("apply_all_volumes")
-	_start_spawn_timer()
-	_start_speed_timer()
-	apply_all_volumes()  # 👈 Add this
+	call_deferred("_start_spawn_timer")
+	call_deferred("_start_speed_timer")
+	apply_all_volumes()
 	_update_ui()
 	_fade_in_music()
 	_fade_in_overlay()
 	$CanvasLayer/SlowdownButton.pressed.connect(_on_slowdown_button_pressed)
+	
+	for i in range(3):
+		_on_spawn_timer()
+		
 func _start_spawn_timer():
 	var timer = Timer.new()
 	timer.name = "SpawnTimer"
@@ -94,37 +100,51 @@ func _start_speed_timer():
 	timer.timeout.connect(func(): _on_speed_timer())
 	add_child(timer)
 
-func _on_spawn_timer():
+func _on_spawn_timer(force_spawn: bool = false):
 	if spawn_entities.is_empty() or spawn_points.is_empty():
 		return
-		
-	var num_to_spawn = randi_range(1, 3)
-	
-	for i in range(num_to_spawn):
+
+	var num_to_spawn = 3 if force_spawn else randi_range(1, 3)
+	var used_lanes: Array[int] = []
+	var attempts = 0
+	var max_attempts = 20
+
+	while used_lanes.size() < num_to_spawn and attempts < max_attempts:
+		attempts += 1
 		var entity_scene = spawn_entities.pick_random()
 		var temp_entity = entity_scene.instantiate()
-		
+
 		var category = "unknown"
 		if "category" in temp_entity:
 			category = temp_entity.category
-			
-		# Find valid lanes for this category
+
 		var valid_lanes: Array[int] = []
 		for idx in lane_category_mapping.keys():
 			if lane_category_mapping[idx] == category:
 				valid_lanes.append(idx)
-				
-		# ~25% chance to pick a random lane instead
+
+		var possible_lanes: Array[int] = []
 		var use_random = randf() < random_spawn_chance
-		var lane_index: int = -1
-		
+
 		if use_random or valid_lanes.is_empty():
-			lane_index = randi_range(0, spawn_points.size() - 1)
+			for i in range(spawn_points.size()):
+				possible_lanes.append(i)
 		else:
-			lane_index = valid_lanes.pick_random()
-			
-		if lane_index >= 0 and lane_index < spawn_points.size():
-			_spawn_entity_at(spawn_points[lane_index], entity_scene)
+			for lane in valid_lanes:
+				possible_lanes.append(lane)
+
+		possible_lanes.shuffle()
+
+		for lane_index in possible_lanes:
+			if used_lanes.has(lane_index):
+				continue
+			if lane_index >= 0 and lane_index < spawn_points.size():
+				var spawn_success = _spawn_entity_at(spawn_points[lane_index], entity_scene)
+				if spawn_success:
+					used_lanes.append(lane_index)
+					break
+
+
 	
 	
 func _spawn_entity_at(spawn_point: Marker3D, entity_scene: PackedScene) -> bool:
@@ -175,39 +195,27 @@ func on_entity_clicked(entity):
 	var expected_category = ""
 	if lane_category_mapping.has(entity.lane_index):
 		expected_category = lane_category_mapping[entity.lane_index]
-		
+
 	var category = entity.category if "category" in entity else "unknown"
 	var points = point_values.get(category, 0)
-	
+
 	if category == expected_category:
-		combo_counter = 0
-		can_use_slowdown = false
-		slowdown_used = false
-		$CanvasLayer/SlowdownButton.disabled = true
+		# Violator logic — wrong lane
 		lives -= 1
+		VoiceManager.play_violator_voice()
 		print("Wrong click! Lives left: %d" % lives)
 	else:
+		# Non-violator logic — correct lane
 		score += points
 		combo_counter += 1
-		if combo_counter > highest_combo:
-			highest_combo = combo_counter
+		VoiceManager.play_non_violator_voice()
 		print("+%d pts (wrong lane). Combo: %d" % [points, combo_counter])
-		
-		if combo_counter >= slowdown_combo_threshold \
-			and not slowdown_used \
-			and slowdown_cooldown == null \
-			and (combo_counter - slowdown_reactivation_combo) >= slowdown_combo_threshold:
-	
-			can_use_slowdown = true
-			$CanvasLayer/SlowdownButton.disabled = false
-			
-			
+
 	show_point_popup(entity.global_position, points, category == expected_category)
 	entity.queue_free()
-	
+
 	if lives <= 0:
 		_end_game()
-		
 	_update_ui()
 	
 		
@@ -216,7 +224,11 @@ func _process(delta):
 	var mat = color_rect.material
 	if mat is ShaderMaterial:
 		mat.set_shader_parameter("time", Time.get_ticks_msec() / 1000.0)
-
+	
+	if not VoiceManager.is_any_active():
+		if randi() % 200 == 0:  # ~0.5% chance per frame
+			VoiceManager.play_normal_voice()
+		
 	# Blink "REC" text
 	if $CanvasLayer.has_node("REC"):
 		$CanvasLayer/REC.visible = int(Time.get_ticks_msec() / 500) % 2 == 0
@@ -437,8 +449,14 @@ func _on_wrong_lane_entity_exit(body):
 		_end_game()
 		
 func get_expected_lanes_for_category(category: String) -> Array[int]:
-		return entity_lane_preferences.get(category, [])
+	var result := entity_lane_preferences.get(category, []) as Array
+	var int_result: Array[int] = []
+	for item in result:
+		if typeof(item) == TYPE_INT:
+			int_result.append(item)
+	return int_result
 
+	
 func _fade_in_music():
 	if not music_player:
 		push_error("MusicPlayer not found.")
@@ -448,8 +466,8 @@ func _fade_in_music():
 	music_player.play()
 
 	var tween = create_tween()
-	tween.tween_property(music_player, "volume_db", linear_to_db(music_volume), 4.0)
-	
+	tween.tween_property(music_player, "volume_db", linear_to_db(music_volume), 5.0)
+
 func set_volume(bus_name: String, linear_value: float) -> void:
 	var db := linear_to_db(linear_value)
 	var bus_index := AudioServer.get_bus_index(bus_name)
@@ -489,7 +507,19 @@ func set_music_volume_linear(music_val: float, ambient_val: float):
 	music_overlay.volume_db = linear_to_db(ambient_val)
 
 func _fade_in_overlay():
-	if music_overlay:
-		music_overlay.volume_db = -80.0
-		music_overlay.play()
-		create_tween().tween_property(music_overlay, "volume_db", linear_to_db(ambient_music_volume), 4.0)
+	if not music_overlay:
+		push_error("AmbientPlayer not found.")
+		return
+
+	music_overlay.volume_db = -80.0
+	music_overlay.play()
+
+	var tween := create_tween()
+	tween.tween_interval(1.0)
+	tween.tween_property(music_overlay, "volume_db", linear_to_db(ambient_music_volume), 5.0)
+
+func range_as_array_int(size: int) -> Array[int]:
+	var result: Array[int] = []
+	for i in range(size):
+		result.append(i)
+	return result

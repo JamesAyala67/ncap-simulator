@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cx4ijuoy5q8o4"
+path="res://.godot/imported/Ano ba yan(pwede all) .ogg-e6a45566b95542702b4a402e4272045f.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/Ano ba yan(pwede all) .ogg"
+dest_files=["res://.godot/imported/Ano ba yan(pwede all) .ogg-e6a45566b95542702b4a402e4272045f.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

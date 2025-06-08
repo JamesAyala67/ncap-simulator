@@ -1,18 +1,18 @@
 [gd_scene load_steps=4 format=3 uid="uid://b8726owqx7wyu"]
 
 [ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_t3s8j"]
-[ext_resource type="PackedScene" uid="uid://b6ayhpucuqg07" path="res://assets/characters/Car 6/SUV.glb" id="2_t3s8j"]
+[ext_resource type="PackedScene" uid="uid://g5q4w0h46u55" path="res://assets/characters/Car 7/motorsikol.glb" id="2_t3s8j"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
-size = Vector3(0.8, 0.638, 3.5)
+size = Vector3(0.75, 0.9, 3.5)
 
-[node name="Entity6" type="CharacterBody3D"]
+[node name="Entity7" type="CharacterBody3D"]
 script = ExtResource("1_t3s8j")
-category = "private"
+category = "motorcycle"
+
+[node name="motorsikol" parent="." instance=ExtResource("2_t3s8j")]
+transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0, 0.659073, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.390203, -0.0722173)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.509251, 0.00677638)
 shape = SubResource("BoxShape3D_pde2e")
-
-[node name="SUV" parent="." instance=ExtResource("2_t3s8j")]
-transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 0, 0.00829458, 0)

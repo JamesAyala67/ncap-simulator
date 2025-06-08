@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cpvv2qserhusm"
+path="res://.godot/imported/USAD NA OH! (NORMAL) .ogg-1ef65fc1ea689df789f06d81f31b2260.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/USAD NA OH! (NORMAL) .ogg"
+dest_files=["res://.godot/imported/USAD NA OH! (NORMAL) .ogg-1ef65fc1ea689df789f06d81f31b2260.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://t8e6wnaebtfx"
+path="res://.godot/imported/Traffic nanamn(1).ogg-0329dffebf1ccccd4e6cfd143fbe86bb.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/Traffic nanamn(1).ogg"
+dest_files=["res://.godot/imported/Traffic nanamn(1).ogg-0329dffebf1ccccd4e6cfd143fbe86bb.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

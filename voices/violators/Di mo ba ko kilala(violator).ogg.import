@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dtaebc1jh3axb"
+path="res://.godot/imported/Di mo ba ko kilala(violator).ogg-685c6523ce3d0cfbee3ccd796cc045b7.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/violators/Di mo ba ko kilala(violator).ogg"
+dest_files=["res://.godot/imported/Di mo ba ko kilala(violator).ogg-685c6523ce3d0cfbee3ccd796cc045b7.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

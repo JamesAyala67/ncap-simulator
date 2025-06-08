@@ -4,14 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://cr20xsjg6wmw2" path="res://assets/characters/Car 4/jeepney.glb" id="2_fpv1m"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
-size = Vector3(0.875, 0.827, 4.5)
+size = Vector3(0.875, 0.960449, 5.73145)
 
 [node name="Entity4" type="CharacterBody3D"]
 script = ExtResource("1_fpv1m")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50607, 0.0511169)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.647164, -0.29321)
 shape = SubResource("BoxShape3D_pde2e")
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("2_fpv1m")]
-transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, -0.0834146, 0.294828, 0.583901)
+transform = Transform3D(0.175, 0, 0, 0, 0.175, 0, 0, 0, 0.175, -0.0834146, 0.506499, 0.583901)

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bb5mpmviokch5"
+path="res://.godot/imported/HUY NASA LINYA AKO HA(NON VIOLATOR) .ogg-71ccf40f6cbc629ba89fc56620a4af1b.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/non_violators/HUY NASA LINYA AKO HA(NON VIOLATOR) .ogg"
+dest_files=["res://.godot/imported/HUY NASA LINYA AKO HA(NON VIOLATOR) .ogg-71ccf40f6cbc629ba89fc56620a4af1b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

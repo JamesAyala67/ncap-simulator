@@ -4,14 +4,15 @@
 [ext_resource type="Script" uid="uid://c7yctrctvk0py" path="res://assets/scripts/entity.gd" id="1_edkwo"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
-size = Vector3(1.11, 0.85, 3)
+size = Vector3(1.4, 1, 3.5)
 
 [node name="Entity1" type="CharacterBody3D"]
 script = ExtResource("1_edkwo")
 category = "private"
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.457386, 0.0511169)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.57863, 0.0511169)
 shape = SubResource("BoxShape3D_pde2e")
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("1_7lhlj")]
+transform = Transform3D(1.3, 0, 0, 0, 1.3, 0, 0, 0, 1.3, 0, 0, 0)

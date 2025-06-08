@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cade2c83x1kxp"
+path="res://.godot/imported/Ang boss ko, si lord(violator) .ogg-ed6bc0473780c45f2e9cbfada1181b2b.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/violators/Ang boss ko, si lord(violator) .ogg"
+dest_files=["res://.godot/imported/Ang boss ko, si lord(violator) .ogg-ed6bc0473780c45f2e9cbfada1181b2b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

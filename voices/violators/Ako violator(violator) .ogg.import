@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c0an81at52qfp"
+path="res://.godot/imported/Ako violator(violator) .ogg-2b4e6fe6061adf318ac4cdd83265be06.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/violators/Ako violator(violator) .ogg"
+dest_files=["res://.godot/imported/Ako violator(violator) .ogg-2b4e6fe6061adf318ac4cdd83265be06.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

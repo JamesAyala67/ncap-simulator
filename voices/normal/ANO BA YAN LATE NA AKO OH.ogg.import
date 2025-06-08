@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bgf7cgfy0sr3q"
+path="res://.godot/imported/ANO BA YAN LATE NA AKO OH.ogg-665248b633e1e3109e848964db98ebec.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/ANO BA YAN LATE NA AKO OH.ogg"
+dest_files=["res://.godot/imported/ANO BA YAN LATE NA AKO OH.ogg-665248b633e1e3109e848964db98ebec.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

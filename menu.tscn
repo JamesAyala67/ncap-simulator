@@ -1,13 +1,16 @@
-[gd_scene load_steps=12 format=3 uid="uid://y72hi8cfk6qh"]
+[gd_scene load_steps=18 format=3 uid="uid://y72hi8cfk6qh"]
 
 [ext_resource type="Script" uid="uid://bmqt7fslvecln" path="res://assets/scripts/menu.gd" id="1_4hy44"]
 [ext_resource type="PackedScene" uid="uid://cvbi7anramml3" path="res://assets/textures/Office.glb" id="1_lti8b"]
 [ext_resource type="Texture2D" uid="uid://c62odai2unvuo" path="res://assets/images/title.png" id="2_ouk20"]
+[ext_resource type="Script" uid="uid://cxy2dnyn4o022" path="res://assets/scripts/menu_canvas.gd" id="3_nrnbx"]
 [ext_resource type="Texture2D" uid="uid://bkvegwk3m6e42" path="res://assets/images/start.png" id="4_l48gv"]
 [ext_resource type="Texture2D" uid="uid://i5p4rd2070ho" path="res://assets/images/tutorial.png" id="5_ecwwl"]
 [ext_resource type="Texture2D" uid="uid://c5ypc1j87p02f" path="res://assets/images/credits.png" id="6_kk3ma"]
 [ext_resource type="Texture2D" uid="uid://ccwyykm0m1ob4" path="res://assets/images/exit.png" id="7_ecwwl"]
 [ext_resource type="AudioStream" uid="uid://dq6pcsnxb65gu" path="res://assets/audio/jungle-ish-beat-for-video-games-314073.mp3" id="8_kk3ma"]
+[ext_resource type="Texture2D" uid="uid://d0goav62sul1h" path="res://assets/images/Credits1.png" id="9_h1wq0"]
+[ext_resource type="Texture2D" uid="uid://hlu2mhrcglrq" path="res://assets/images/Credits2.png" id="10_dwrpx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hy44"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -25,9 +28,45 @@ glow_levels/3 = 4.29
 glow_levels/5 = 6.39
 glow_blend_mode = 1
 
+[sub_resource type="Animation" id="Animation_iqepy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TutorialImage:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_nrnbx"]
+resource_name = "fade_in"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("TutorialImage:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 0.00392157)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_h1wq0"]
+_data = {
+&"RESET": SubResource("Animation_iqepy"),
+&"fade_in": SubResource("Animation_nrnbx")
+}
+
 [node name="Menu" type="Node3D"]
 script = ExtResource("1_4hy44")
-menu_volume_percent = 30
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_l48gv")
@@ -117,6 +156,7 @@ fov = 60.0
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6.5, 1.6387)
 
 [node name="MenuCanvas" type="CanvasLayer" parent="."]
+script = ExtResource("3_nrnbx")
 
 [node name="Panel" type="ColorRect" parent="MenuCanvas"]
 anchors_preset = 15
@@ -142,7 +182,7 @@ offset_bottom = 454.0
 scale = Vector2(0.3, 0.3)
 texture_normal = ExtResource("4_l48gv")
 
-[node name="Tutorial Button" type="TextureButton" parent="MenuCanvas/Panel"]
+[node name="TutorialButton" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
 offset_left = 173.755
 offset_top = 379.0
@@ -150,6 +190,7 @@ offset_right = 587.755
 offset_bottom = 475.0
 scale = Vector2(0.375, 0.375)
 texture_normal = ExtResource("5_ecwwl")
+stretch_mode = 0
 
 [node name="CreditButton" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
@@ -169,12 +210,122 @@ offset_bottom = 565.0
 scale = Vector2(0.375, 0.375)
 texture_normal = ExtResource("7_ecwwl")
 
-[node name="PopupImage" type="TextureRect" parent="MenuCanvas/Panel"]
-offset_right = 40.0
-offset_bottom = 40.0
+[node name="TutorialOverlay" type="ColorRect" parent="MenuCanvas"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.647059)
+
+[node name="TutorialImage" type="TextureRect" parent="MenuCanvas"]
+z_index = 2
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -99.0
+offset_right = 20.0
+offset_bottom = -59.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch_mode = 5
+
+[node name="TutorialAnimation" type="AnimationPlayer" parent="MenuCanvas"]
+libraries = {
+&"": SubResource("AnimationLibrary_h1wq0")
+}
+
+[node name="BackButton" type="Button" parent="MenuCanvas"]
+visible = false
+z_index = 99
+offset_left = 385.0
+offset_top = 475.0
+offset_right = 430.0
+offset_bottom = 506.0
+text = "Back"
+
+[node name="NextButton" type="Button" parent="MenuCanvas"]
+visible = false
+z_index = 99
+offset_left = 765.0
+offset_top = 475.0
+offset_right = 810.0
+offset_bottom = 506.0
+text = "Next"
+
+[node name="PreviousButton" type="Button" parent="MenuCanvas"]
+visible = false
+z_index = 99
+offset_left = 675.0
+offset_top = 475.0
+offset_right = 750.0
+offset_bottom = 506.0
+text = "Previous"
+
+[node name="CreditOverlay" type="Control" parent="MenuCanvas"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BackgroundDim" type="ColorRect" parent="MenuCanvas/CreditOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.75)
+
+[node name="CreditScrollContainer" type="Control" parent="MenuCanvas/CreditOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="CreditsImage1" type="TextureRect" parent="MenuCanvas/CreditOverlay/CreditScrollContainer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_right = 250.0
+offset_bottom = 400.0
+grow_horizontal = 2
+texture = ExtResource("9_h1wq0")
+
+[node name="CreditsImage2" type="TextureRect" parent="MenuCanvas/CreditOverlay/CreditScrollContainer"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 400.0
+offset_right = 250.0
+offset_bottom = 800.0
+grow_horizontal = 2
+texture = ExtResource("10_dwrpx")
+
+[node name="ExitCreditButton" type="Button" parent="MenuCanvas/CreditOverlay"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -37.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Exit"
 
 [node name="MenuOST" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_kk3ma")
 autoplay = true
-bus = &"MenuOST"
 parameters/looping = true

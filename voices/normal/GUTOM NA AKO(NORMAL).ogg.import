@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cvbcnarhbp4wp"
+path="res://.godot/imported/GUTOM NA AKO(NORMAL).ogg-b719586084b923a0a10ee63e76b83f61.oggvorbisstr"
+
+[deps]
+
+source_file="res://voices/normal/GUTOM NA AKO(NORMAL).ogg"
+dest_files=["res://.godot/imported/GUTOM NA AKO(NORMAL).ogg-b719586084b923a0a10ee63e76b83f61.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
