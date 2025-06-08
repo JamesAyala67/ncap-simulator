@@ -1,10 +1,10 @@
 extends Node3D
 
-@export var spawn_interval: float = 1.5
-@export var min_spawn_interval: float = 0.3
-@export var spawn_speed: float = 5.0
-@export var speed_increment: float = 1.0
-@export var spawn_speed_variance: float = 2.0
+@export var spawn_interval: float = 2.5         # Starts easy (slower spawns)
+@export var min_spawn_interval: float = 0.5     # Still speeds up over time, but not too fast
+@export var spawn_speed: float = 3.0            # Starts slower
+@export var speed_increment: float = 0.5        # Gradual increase
+@export var spawn_speed_variance: float = 1.0   # Less speed randomness at start
 @export var spawn_entities: Array[PackedScene]
 @export var spawn_points_group: NodePath = "SpawnPoints"
 @export var default_spawn_indexes: Array[int] = [0, 1]
@@ -28,6 +28,7 @@ var slowdown_used: bool = false
 var slowdown_cooldown: Timer = null
 var slowdown_cooldown_time_left: float = 0.0
 const SLOWDOWN_COOLDOWN_TIME: float = 7.0
+var slowdown_reactivation_combo: int = 0  # combo needed after cooldown
 
 var point_values := {
 	"motorcycle": 7,
@@ -36,6 +37,15 @@ var point_values := {
 	"bus": 5,
 	"airplane": 50
 }
+
+var entity_lane_preferences: Dictionary = {
+	"motorcycle": [2] as Array[int],
+	"commuter": [0, 1] as Array[int],
+	"private": [3, 4] as Array[int],
+	"bus": [5] as Array[int],
+	"airplane": [] as Array[int]
+}
+
 
 func _ready():
 	randomize()
@@ -73,50 +83,59 @@ func _start_speed_timer():
 func _on_spawn_timer():
 	if spawn_entities.is_empty() or spawn_points.is_empty():
 		return
-
-	var num_to_spawn = randi_range(1, 3)
-	var use_random = randf() < random_spawn_chance
-
-	if use_random:
-		var shuffled = spawn_points.duplicate()
-		shuffled.shuffle()
-		var spawned = 0
-		for sp in shuffled:
-			if spawned >= num_to_spawn:
-				break
-			if _spawn_entity_at(sp):
-				spawned += 1
-		if spawned == 0:
-			print("No entity spawned. All lanes blocked?")
-	else:
-		var shuffled_indexes = default_spawn_indexes.duplicate()
-		shuffled_indexes.shuffle()
-		for i in range(min(num_to_spawn, shuffled_indexes.size())):
-			var idx = shuffled_indexes[i]
-			if idx >= 0 and idx < spawn_points.size():
-				_spawn_entity_at(spawn_points[idx])
-
-
-func _spawn_entity_at(spawn_point: Marker3D) -> bool:
-	var space_state = get_world_3d().direct_space_state
-	var origin = spawn_point.global_transform.origin + Vector3(0, 0.5, 0)
-	var to = origin + Vector3(0, 0, 1.5)
-
-	var ray_params = PhysicsRayQueryParameters3D.new()
-	ray_params.from = origin
-	ray_params.to = to
-	ray_params.collide_with_bodies = true
-	ray_params.collide_with_areas = false
-
-	var result = space_state.intersect_ray(ray_params)
-
-	if result and result.collider.is_in_group("poofable"):
-		print("Blocked by entity at:", result.position)
-		return false
 		
-	var entity_scene = spawn_entities.pick_random()
-	var entity = entity_scene.instantiate()
+	var num_to_spawn = randi_range(1, 3)
 	
+	for i in range(num_to_spawn):
+		var entity_scene = spawn_entities.pick_random()
+		var temp_entity = entity_scene.instantiate()
+		
+		var category = "unknown"
+		if "category" in temp_entity:
+			category = temp_entity.category
+			
+		# Find valid lanes for this category
+		var valid_lanes: Array[int] = []
+		for idx in lane_category_mapping.keys():
+			if lane_category_mapping[idx] == category:
+				valid_lanes.append(idx)
+				
+		# ~25% chance to pick a random lane instead
+		var use_random = randf() < random_spawn_chance
+		var lane_index: int = -1
+		
+		if use_random or valid_lanes.is_empty():
+			lane_index = randi_range(0, spawn_points.size() - 1)
+		else:
+			lane_index = valid_lanes.pick_random()
+			
+		if lane_index >= 0 and lane_index < spawn_points.size():
+			_spawn_entity_at(spawn_points[lane_index], entity_scene)
+	
+	
+func _spawn_entity_at(spawn_point: Marker3D, entity_scene: PackedScene) -> bool:
+	var space_state = get_world_3d().direct_space_state
+	var check_origin = spawn_point.global_transform.origin + Vector3(0, 0.5, 0)
+
+	var shape = SphereShape3D.new()
+	shape.radius = 0.75  # or tweak based on entity size
+
+	var shape_params = PhysicsShapeQueryParameters3D.new()
+	shape_params.shape = shape
+	shape_params.transform.origin = check_origin
+	shape_params.collide_with_bodies = true
+	shape_params.collide_with_areas = false
+
+	var results = space_state.intersect_shape(shape_params, 1)
+
+	for result in results:
+		if result.collider.is_in_group("poofable"):
+			print("Blocked spawn by nearby entity.")
+			return false
+
+
+	var entity = entity_scene.instantiate()
+
 	if entity is CharacterBody3D:
 		entity.global_transform = spawn_point.global_transform
 		var randomized_speed = spawn_speed + randf_range(-spawn_speed_variance, spawn_speed_variance)
@@ -160,9 +179,14 @@ func on_entity_clicked(entity):
 			highest_combo = combo_counter
 		print("+%d pts (wrong lane). Combo: %d" % [points, combo_counter])
 		
-		if combo_counter >= slowdown_combo_threshold and not slowdown_used and slowdown_cooldown == null:
+		if combo_counter >= slowdown_combo_threshold \
+			and not slowdown_used \
+			and slowdown_cooldown == null \
+			and (combo_counter - slowdown_reactivation_combo) >= slowdown_combo_threshold:
+	
 			can_use_slowdown = true
 			$CanvasLayer/SlowdownButton.disabled = false
+			
 			
 	show_point_popup(entity.global_position, points, category == expected_category)
 	entity.queue_free()
@@ -319,24 +343,32 @@ func _activate_slowdown():
 	slowdown_timer.timeout.connect(_deactivate_slowdown)
 	add_child(slowdown_timer)
 	slowdown_timer.start()
+	# Reduce spawn interval during slowdown
+	var spawn_timer = get_node_or_null("SpawnTimer")
+	if spawn_timer:
+		spawn_timer.wait_time = max(spawn_interval * 0.5, min_spawn_interval)
 	
 func _deactivate_slowdown():
 	is_slowdown_active = false
 	print("SLOWDOWN ENDED")
 	$CanvasLayer/SlowdownButton.disabled = false
-
-
+	
+	# Restore normal spawn interval
+	var spawn_timer = get_node_or_null("SpawnTimer")
+	if spawn_timer:
+		spawn_timer.wait_time = spawn_interval
+	
 	# Reset speed
 	for child in get_children():
 		if child.is_in_group("poofable") and child.has_method("set_speed_multiplier"):
 			child.set_speed_multiplier(1.0)
-
+			
 	# Animate shader back to normal
 	var mat = $CanvasLayer/ColorRect.material as ShaderMaterial
 	if mat:
 		var tween = create_tween()
 		tween.tween_property(mat, "shader_parameter/slowdown_intensity", 0.0, 0.5)
-
+		
 	# Cleanup
 	if slowdown_timer:
 		slowdown_timer.queue_free()
@@ -351,7 +383,9 @@ func _try_activate_slowdown():
 		slowdown_used = true
 		can_use_slowdown = false
 		$CanvasLayer/SlowdownButton.disabled = true
+		slowdown_reactivation_combo = combo_counter + 1  # 👈 force new combo streak
 		_start_slowdown_cooldown()
+
 		
 func _start_slowdown_cooldown():
 	slowdown_cooldown = Timer.new()
@@ -371,3 +405,15 @@ func _on_slowdown_cooldown_finished():
 	if combo_counter >= slowdown_combo_threshold:
 		can_use_slowdown = true
 		$CanvasLayer/SlowdownButton.disabled = false
+
+func _on_wrong_lane_entity_exit():
+	if game_over:
+		return
+	lives -= 1
+	combo_counter = 0
+	_update_ui()
+	if lives <= 0:
+		_end_game()
+		
+func get_expected_lanes_for_category(category: String) -> Array[int]:
+		return entity_lane_preferences.get(category, [])

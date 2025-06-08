@@ -43,3 +43,9 @@ func go_poof():
 	# Notify the main scene regardless of lane
 	get_tree().get_current_scene().call("on_entity_clicked", self)
 	queue_free()
+	
+func get_lane_index() -> int:
+	return lane_index
+
+func get_category() -> String:
+	return category

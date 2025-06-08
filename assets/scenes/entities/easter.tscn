@@ -4,14 +4,14 @@
 [ext_resource type="PackedScene" uid="uid://s47hqi17duoi" path="res://assets/characters/Extra/philippine_airlines_airbus_a350-900_xwb.glb" id="2_gf3xp"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_pde2e"]
-size = Vector3(1.68, 0.361, 3)
+size = Vector3(16.181, 4.45128, 12.8335)
 
 [node name="Entity2" type="CharacterBody3D"]
 script = ExtResource("1_gf3xp")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00268555, 0.272785, 0.044342)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.109307, 2.4297, -1.34502)
 shape = SubResource("BoxShape3D_pde2e")
 
 [node name="Sketchfab_Scene" parent="." instance=ExtResource("2_gf3xp")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0.295022, 0.384, 0)
+transform = Transform3D(-4.37114e-07, 0, 10, 0, 10, 0, -10, 0, -4.37114e-07, 2.89011, 3.10457, 0)

@@ -1,0 +1,102 @@
+[gd_scene load_steps=11 format=3 uid="uid://y72hi8cfk6qh"]
+
+[ext_resource type="Script" uid="uid://bmqt7fslvecln" path="res://assets/scripts/menu.gd" id="1_4hy44"]
+[ext_resource type="PackedScene" uid="uid://di6ctisd5700k" path="res://assets/textures/Office.glb" id="1_lti8b"]
+[ext_resource type="Shader" uid="uid://cdg1md31hj7yk" path="res://menu.gdshader" id="2_mae5d"]
+[ext_resource type="Texture2D" uid="uid://c62odai2unvuo" path="res://assets/images/title.png" id="2_ouk20"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hy44"]
+sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+ground_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
+
+[sub_resource type="Sky" id="Sky_ytr4m"]
+sky_material = SubResource("ProceduralSkyMaterial_4hy44")
+
+[sub_resource type="Environment" id="Environment_l48gv"]
+background_mode = 2
+sky = SubResource("Sky_ytr4m")
+tonemap_mode = 2
+glow_enabled = true
+glow_levels/3 = 4.29
+glow_levels/5 = 6.39
+glow_intensity = 1.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ecwwl"]
+emission_enabled = true
+emission = Color(0.7, 0.8, 1, 1)
+emission_energy_multiplier = 5.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_kk3ma"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_4hy44"]
+shader = ExtResource("2_mae5d")
+
+[node name="Menu" type="Node3D"]
+script = ExtResource("1_4hy44")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_l48gv")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.939693, 0, 0.34202, 0, 1, 0, -0.34202, 0, -0.939693, 5.5, 4.35, -11.5)
+fov = 60.0
+
+[node name="Office" parent="." instance=ExtResource("1_lti8b")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 6.5, 1.6387)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1.7736, -0.438265, 0.0357359, 0, 0.0871558, 0.928453, -0.86888, -0.89461, 0.0729461, -0.562001, 4.81561, -2.30937)
+material_override = SubResource("StandardMaterial3D_ecwwl")
+mesh = SubResource("PlaneMesh_kk3ma")
+
+[node name="MenuCanvas" type="CanvasLayer" parent="."]
+
+[node name="Panel" type="ColorRect" parent="MenuCanvas"]
+material = SubResource("ShaderMaterial_4hy44")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.25098)
+
+[node name="TitleLabel" type="TextureRect" parent="MenuCanvas/Panel"]
+offset_left = 50.0
+offset_right = 550.0
+offset_bottom = 500.0
+texture = ExtResource("2_ouk20")
+
+[node name="StartButton" type="Button" parent="MenuCanvas/Panel"]
+offset_left = 243.0
+offset_top = 347.0
+offset_right = 346.0
+offset_bottom = 378.0
+text = "Start Button"
+
+[node name="Tutorial Button" type="Button" parent="MenuCanvas/Panel"]
+offset_left = 232.0
+offset_top = 391.0
+offset_right = 358.0
+offset_bottom = 422.0
+text = "Tutorial Button"
+
+[node name="ExitButton" type="Button" parent="MenuCanvas/Panel"]
+offset_left = 243.0
+offset_top = 492.0
+offset_right = 337.0
+offset_bottom = 523.0
+text = "Exit Button"
+
+[node name="SettingsButton" type="Button" parent="MenuCanvas/Panel"]
+offset_left = 229.0
+offset_top = 443.0
+offset_right = 357.0
+offset_bottom = 474.0
+text = "Settings Button"
+
+[node name="SpotLight3D" type="SpotLight3D" parent="."]
+transform = Transform3D(0.9026, 0, 0.43048, 0, 1, 0, -0.43048, 0, 0.9026, -0.464109, 4.60697, -2.50512)
+light_color = Color(0.678431, 0.847059, 0.901961, 1)
+light_energy = 2.0
+shadow_enabled = true
+spot_angle = 40.6796
