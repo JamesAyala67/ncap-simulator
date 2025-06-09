@@ -20,9 +20,9 @@ var voices := {
 }
 
 var extra_cooldown_time := {
-	"violators": 1.5,
-	"non_violators": 1.0,
-	"normal": 2.0
+	"violators": 3,
+	"non_violators": 3,
+	"normal": 5
 }
 
 func _ready():
