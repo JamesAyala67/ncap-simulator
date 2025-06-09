@@ -1,9 +1,9 @@
 extends Node3D
 
-@export var spawn_interval: float = 2.5        # Faster initial spawn
+@export var spawn_interval: float = 2        # Faster initial spawn
 @export var min_spawn_interval: float = 1     # Still speeds up over time, but not too fast
-@export var spawn_speed: float = 5            # Faster initial movement
-@export var speed_increment: float = 0.3        # Gradual increase
+@export var spawn_speed: float = 7            # Faster initial movement
+@export var speed_increment: float = 0.5        # Gradual increase
 @export var spawn_speed_variance: float = 2   # More variation at start
 @export var spawn_entities: Array[PackedScene]
 @export var spawn_points_group: NodePath = "SpawnPoints"
@@ -363,16 +363,19 @@ func show_point_popup(world_position: Vector3, points: int, is_penalty: bool):
 	tween.tween_callback(Callable(popup, "queue_free"))
 	
 func _activate_slowdown():
-	if not slowdown_ready or slowdown_used:
-		print("Slowdown not ready.")
-		return
+	if not slowdown_ready or slowdown_used or is_slowdown_active:
+		print("Slowdown not available.")
+		return  # ❌ Don't activate or start cooldown
 
+	# ✅ Real activation starts here
 	slowdown_ready = false
 	slowdown_used = true
 	is_slowdown_active = true
 	print("SLOWDOWN ACTIVATED")
 
-	# Show "HULI KAAA!" popup
+	$CanvasLayer/SlowdownButton.disabled = true
+
+	# Show popup
 	var popup = $CanvasLayer/SlowdownPopupLabel
 	popup.text = "HULI KAAA!"
 	popup.visible = true
@@ -384,29 +387,17 @@ func _activate_slowdown():
 	popup_tween.tween_property(popup, "scale", Vector2(1.5, 1.5), 1.2)
 	popup_tween.tween_callback(Callable(popup, "hide"))
 
-	# Apply speed slowdown to entities
+	# Apply slowdown to entities
 	for child in get_children():
 		if child.is_in_group("poofable") and child.has_method("set_speed_multiplier"):
 			child.set_speed_multiplier(slowdown_multiplier)
 
-	# Animate screen effect
+	# Screen shader
 	var mat = $CanvasLayer/ColorRect.material as ShaderMaterial
 	if mat:
 		var shader_tween = create_tween()
 		shader_tween.tween_property(mat, "shader_parameter/slowdown_intensity", 1.0, 0.3)
 
-	# Start slowdown duration timer
-	slowdown_timer = Timer.new()
-	slowdown_timer.one_shot = true
-	slowdown_timer.wait_time = slowdown_duration
-	slowdown_timer.timeout.connect(_deactivate_slowdown)
-	add_child(slowdown_timer)
-	slowdown_timer.start()
-	# Reduce spawn interval during slowdown
-	var spawn_timer = get_node_or_null("SpawnTimer")
-	if spawn_timer:
-		spawn_timer.wait_time = max(spawn_interval * 0.5, min_spawn_interval)
-	
 	# Timer to end slowdown
 	slowdown_timer = Timer.new()
 	slowdown_timer.one_shot = true
@@ -415,15 +406,15 @@ func _activate_slowdown():
 	add_child(slowdown_timer)
 	slowdown_timer.start()
 
+
 func _deactivate_slowdown():
 	is_slowdown_active = false
 
-	# Reset entity speeds
 	for child in get_children():
 		if child.is_in_group("poofable") and child.has_method("set_speed_multiplier"):
 			child.set_speed_multiplier(1.0)
 
-	# Reset screen effect
+	# Reset shader
 	var mat = $CanvasLayer/ColorRect.material as ShaderMaterial
 	if mat:
 		var shader_tween = create_tween()
@@ -434,7 +425,7 @@ func _deactivate_slowdown():
 	if spawn_timer:
 		spawn_timer.wait_time = spawn_interval
 
-	# Start cooldown timer
+	# ✅ Start cooldown NOW (after real slowdown ends)
 	slowdown_cooldown = Timer.new()
 	slowdown_cooldown.one_shot = true
 	slowdown_cooldown.wait_time = SLOWDOWN_COOLDOWN_TIME

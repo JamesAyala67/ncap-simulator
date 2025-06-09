@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://q67r6e6eok01"]
+[gd_scene load_steps=33 format=3 uid="uid://q67r6e6eok01"]
 
 [ext_resource type="PackedScene" uid="uid://7d3opusjinc6" path="res://assets/scenes/platform_scene.tscn" id="1_0xm2m"]
 [ext_resource type="PackedScene" uid="uid://tysbdpscvwjy" path="res://assets/scenes/entities/entity1.tscn" id="2_7mycd"]
@@ -78,6 +78,41 @@ volumetric_fog_ambient_inject = 1.0
 shader = ExtResource("4_1bvp3")
 shader_parameter/time = 0.0
 shader_parameter/slowdown_intensity = 0.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2cqfq"]
+bg_color = Color(0, 0, 0, 0.666667)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yaehf"]
+bg_color = Color(0.54, 0.54, 0.54, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_074og"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cegan"]
+bg_color = Color(0.541176, 0.541176, 0.541176, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_82xsv"]
+bg_color = Color(0.2, 0.2, 0.2, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ycdy4"]
 size = Vector3(13, 3, 0.75)
@@ -243,14 +278,14 @@ theme_override_font_sizes/font_size = 40
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="GameOverMenu" type="Control" parent="CanvasLayer"]
+[node name="GameOverMenu" type="Panel" parent="CanvasLayer"]
 visible = false
-layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_2cqfq")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/GameOverMenu"]
 clip_contents = true
@@ -268,14 +303,32 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="GameOverLabel" type="Label" parent="CanvasLayer/GameOverMenu/VBoxContainer"]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("11_vivmo")
+theme_override_font_sizes/font_size = 48
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/GameOverMenu/VBoxContainer"]
 layout_mode = 2
 
 [node name="Restart" type="Button" parent="CanvasLayer/GameOverMenu/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_vivmo")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_yaehf")
+theme_override_styles/normal = SubResource("StyleBoxFlat_074og")
 text = "Restart"
 
 [node name="Exit" type="Button" parent="CanvasLayer/GameOverMenu/VBoxContainer"]
 layout_mode = 2
+theme_override_fonts/font = ExtResource("11_vivmo")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/hover = SubResource("StyleBoxFlat_cegan")
+theme_override_styles/normal = SubResource("StyleBoxFlat_82xsv")
 text = "Exit"
 
 [node name="DespawnZone" type="Area3D" parent="."]

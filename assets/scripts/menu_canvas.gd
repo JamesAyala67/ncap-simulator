@@ -35,21 +35,28 @@ func _ready():
 func _on_tutorial_button_pressed():
 	current_index = 0
 	tutorial_image.texture = tutorial_images[current_index]
+
+	# Reset modulate for both
+	tutorial_image.modulate = Color(1, 1, 1, 0)
+	tutorial_overlay.modulate = Color(0, 0, 0, 0)
+
+	# Make visible
 	tutorial_image.visible = true
+	tutorial_overlay.visible = true
 	back_button.visible = true
 	next_button.visible = true
 	previous_button.visible = true
-	tutorial_overlay.visible = true
+
+	# Fade both in
 	fade_in_image()
 	update_buttons()
+
 	
 func _on_back_button_pressed():
 	var tween = get_tree().create_tween()
-
 	tween.tween_property(tutorial_image, "modulate", Color(1, 1, 1, 0), 0.3)
-	tween.tween_property(tutorial_overlay, "modulate", Color(0, 0, 0, 0), 0.3)
+	tween.parallel().tween_property(tutorial_overlay, "modulate", Color(0, 0, 0, 0), 0.3)
 
-	# Wait, then hide everything
 	await tween.finished
 
 	tutorial_image.visible = false
@@ -57,6 +64,7 @@ func _on_back_button_pressed():
 	back_button.visible = false
 	next_button.visible = false
 	previous_button.visible = false
+
 
 	
 func _on_next_button_pressed():
@@ -82,12 +90,10 @@ func update_buttons():
 	next_button.disabled = current_index == tutorial_images.size() - 1
 	
 func fade_in_image():
-	tutorial_image.modulate = Color(1, 1, 1, 0)
-	tutorial_image.visible = true
-	
 	var tween = get_tree().create_tween()
 	tween.tween_property(tutorial_image, "modulate", Color(1, 1, 1, 1), 0.5)
-	
+	tween.parallel().tween_property(tutorial_overlay, "modulate", Color(0, 0, 0, 0.7), 0.5)
+
 func _on_credit_button_pressed():
 	# Hide all tutorial/menu UI
 	panel.visible = false
