@@ -144,7 +144,6 @@ func _on_spawn_timer(force_spawn: bool = false):
 					used_lanes.append(lane_index)
 					break
 
-
 	
 	
 func _spawn_entity_at(spawn_point: Marker3D, entity_scene: PackedScene) -> bool:
