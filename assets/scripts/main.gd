@@ -1,10 +1,10 @@
 extends Node3D
 
-@export var spawn_interval: float = 1.2         # Faster initial spawn
-@export var min_spawn_interval: float = 0.5     # Still speeds up over time, but not too fast
-@export var spawn_speed: float = 4.5            # Faster initial movement
-@export var speed_increment: float = 0.5        # Gradual increase
-@export var spawn_speed_variance: float = 1.5   # More variation at start
+@export var spawn_interval: float = 2.5        # Faster initial spawn
+@export var min_spawn_interval: float = 1     # Still speeds up over time, but not too fast
+@export var spawn_speed: float = 5            # Faster initial movement
+@export var speed_increment: float = 0.3        # Gradual increase
+@export var spawn_speed_variance: float = 2   # More variation at start
 @export var spawn_entities: Array[PackedScene]
 @export var spawn_points_group: NodePath = "SpawnPoints"
 @export var default_spawn_indexes: Array[int] = [0, 1]
@@ -36,8 +36,9 @@ var slowdown_used: bool = false
 var slowdown_cooldown: Timer = null
 var slowdown_cooldown_time_left: float = 0.0
 const SLOWDOWN_COOLDOWN_TIME: float = 7.0
-var slowdown_reactivation_combo: int = 0  # combo needed after cooldown
-
+var slowdown_reactivation_combo: int = 15  # combo needed after cooldown
+var slowdown_combo_counter: int = 0
+var slowdown_ready: bool = false
 
 
 var point_values := {
@@ -80,8 +81,6 @@ func _ready():
 	_fade_in_overlay()
 	$CanvasLayer/SlowdownButton.pressed.connect(_on_slowdown_button_pressed)
 	
-	for i in range(3):
-		_on_spawn_timer()
 		
 func _start_spawn_timer():
 	var timer = Timer.new()
@@ -207,6 +206,13 @@ func on_entity_clicked(entity):
 		# Non-violator logic — correct lane
 		score += points
 		combo_counter += 1
+		if not is_slowdown_active and not slowdown_used:
+			slowdown_combo_counter += 1
+
+		if slowdown_combo_counter >= slowdown_combo_threshold:
+			slowdown_ready = true
+			slowdown_combo_counter = 0  # reset for next 15-combo cycle
+
 		VoiceManager.play_non_violator_voice()
 		print("+%d pts (wrong lane). Combo: %d" % [points, combo_counter])
 
@@ -295,6 +301,13 @@ func _update_ui():
 		else:
 			meter.modulate = Color.WHITE
 			
+	var slowdown_btn = $CanvasLayer/SlowdownButton
+	if slowdown_ready and not slowdown_used and not is_slowdown_active:
+		slowdown_btn.modulate = Color(1, 1, 1, 1)  # Fully visible
+		slowdown_btn.disabled = false
+	else:
+		slowdown_btn.modulate = Color(0.6, 0.6, 0.6, 0.7)  # Dimmed
+		slowdown_btn.disabled = false  # Keep clickable for shake
 	
 func _end_game():
 	game_over = true
@@ -321,16 +334,18 @@ func _end_game():
 		
 func show_point_popup(world_position: Vector3, points: int, is_penalty: bool):
 	var popup = Label.new()
-	var font = FontVariation.new()
-	var font_file = load("res://assets/fonts/Press_Start_2P,VT323/Press_Start_2P/PressStart2P-Regular.ttf")	
-	popup.text = "-%d" % points if is_penalty else "+%d" % points
-	popup.modulate = Color(1, 0.2, 0.2) if is_penalty else Color(0.3, 1, 0.3)
-	if font_file is FontFile:
-		font.font_file = font_file
-		font.size = 16
+	var font_file = "res://assets/fonts/Press_Start_2P/PressStart2P-Regular.ttf"
+
+	if font_file:
+		var font = FontVariation.new()
+		font.set("font_file", font_file)  # Use `set()` to assign indirectly
+		font.set("size", 16)
 		popup.add_theme_font_override("font", font)
 	else:
 		push_error("Failed to load font file.")
+
+	popup.text = "-%d" % points if is_penalty else "+%d" % points
+	popup.modulate = Color(1, 0.2, 0.2) if is_penalty else Color(0.3, 1, 0.3)
 	popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	popup.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
@@ -348,9 +363,14 @@ func show_point_popup(world_position: Vector3, points: int, is_penalty: bool):
 	tween.tween_callback(Callable(popup, "queue_free"))
 	
 func _activate_slowdown():
+	if not slowdown_ready or slowdown_used:
+		print("Slowdown not ready.")
+		return
+
+	slowdown_ready = false
+	slowdown_used = true
 	is_slowdown_active = true
 	print("SLOWDOWN ACTIVATED")
-	$CanvasLayer/SlowdownButton.disabled = true
 
 	# Show "HULI KAAA!" popup
 	var popup = $CanvasLayer/SlowdownPopupLabel
@@ -387,27 +407,47 @@ func _activate_slowdown():
 	if spawn_timer:
 		spawn_timer.wait_time = max(spawn_interval * 0.5, min_spawn_interval)
 	
+	# Timer to end slowdown
+	slowdown_timer = Timer.new()
+	slowdown_timer.one_shot = true
+	slowdown_timer.wait_time = slowdown_duration
+	slowdown_timer.timeout.connect(_deactivate_slowdown)
+	add_child(slowdown_timer)
+	slowdown_timer.start()
+
 func _deactivate_slowdown():
 	is_slowdown_active = false
-	print("SLOWDOWN ENDED")
 
 	# Reset entity speeds
 	for child in get_children():
 		if child.is_in_group("poofable") and child.has_method("set_speed_multiplier"):
 			child.set_speed_multiplier(1.0)
 
-	# Reset visual shader
+	# Reset screen effect
 	var mat = $CanvasLayer/ColorRect.material as ShaderMaterial
 	if mat:
-		mat.set_shader_parameter("slowdown_intensity", 0.0)
+		var shader_tween = create_tween()
+		shader_tween.tween_property(mat, "shader_parameter/slowdown_intensity", 0.0, 0.3)
 
-	# Restore original spawn interval
+	# Restore spawn rate
 	var spawn_timer = get_node_or_null("SpawnTimer")
 	if spawn_timer:
 		spawn_timer.wait_time = spawn_interval
+
+	# Start cooldown timer
+	slowdown_cooldown = Timer.new()
+	slowdown_cooldown.one_shot = true
+	slowdown_cooldown.wait_time = SLOWDOWN_COOLDOWN_TIME
+	slowdown_cooldown.timeout.connect(_reset_slowdown)
+	add_child(slowdown_cooldown)
+	slowdown_cooldown.start()
 	
 func _on_slowdown_button_pressed():
-	_try_activate_slowdown()
+	if slowdown_ready and not slowdown_used and not is_slowdown_active:
+		_activate_slowdown()
+	else:
+		# Give feedback: shake and dim
+		shake_button($CanvasLayer/SlowdownButton)
 	
 func _try_activate_slowdown():
 	if not is_slowdown_active and combo_counter >= slowdown_combo_threshold and not slowdown_used:
@@ -521,3 +561,13 @@ func range_as_array_int(size: int) -> Array[int]:
 	for i in range(size):
 		result.append(i)
 	return result
+	
+func _reset_slowdown():
+	slowdown_used = false
+
+func shake_button(button: Control):
+	var tween = create_tween()
+	var original_pos = button.position
+	tween.tween_property(button, "position", original_pos + Vector2(5, 0), 0.05)
+	tween.tween_property(button, "position", original_pos - Vector2(5, 0), 0.05).set_delay(0.05)
+	tween.tween_property(button, "position", original_pos, 0.05).set_delay(0.1)
