@@ -275,13 +275,13 @@ func _unhandled_input(event):
 
 func _update_ui():
 	if $CanvasLayer.has_node("ComboLabel"):
-		$CanvasLayer/ComboLabel.text = "Combo: %d" % combo_counter
+		$CanvasLayer/ComboLabel.text =  "COMBO %d" % combo_counter
 
 	if $CanvasLayer.has_node("LivesLabel"):
-		$CanvasLayer/LivesLabel.text = "Lives: %d" % lives
+		$CanvasLayer/LivesLabel.text = "LIVES: %d" % lives
 
 	if $CanvasLayer.has_node("ScoreLabel"):
-		$CanvasLayer/ScoreLabel.text = "Score: %d" % score
+		$CanvasLayer/ScoreLabel.text = "SCORE: %d" % score
 		
 	if $CanvasLayer.has_node("ComboMeter"):
 		var meter = $CanvasLayer/ComboMeter
@@ -321,9 +321,16 @@ func _end_game():
 		
 func show_point_popup(world_position: Vector3, points: int, is_penalty: bool):
 	var popup = Label.new()
+	var font = FontVariation.new()
+	var font_file = load("res://assets/fonts/Press_Start_2P,VT323/Press_Start_2P/PressStart2P-Regular.ttf")	
 	popup.text = "-%d" % points if is_penalty else "+%d" % points
 	popup.modulate = Color(1, 0.2, 0.2) if is_penalty else Color(0.3, 1, 0.3)
-	popup.add_theme_font_size_override("font_size", 24)
+	if font_file is FontFile:
+		font.font_file = font_file
+		font.size = 16
+		popup.add_theme_font_override("font", font)
+	else:
+		push_error("Failed to load font file.")
 	popup.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	popup.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 
@@ -383,51 +390,43 @@ func _activate_slowdown():
 func _deactivate_slowdown():
 	is_slowdown_active = false
 	print("SLOWDOWN ENDED")
-	$CanvasLayer/SlowdownButton.disabled = false
-	
-	# Restore normal spawn interval
+
+	# Reset entity speeds
+	for child in get_children():
+		if child.is_in_group("poofable") and child.has_method("set_speed_multiplier"):
+			child.set_speed_multiplier(1.0)
+
+	# Reset visual shader
+	var mat = $CanvasLayer/ColorRect.material as ShaderMaterial
+	if mat:
+		mat.set_shader_parameter("slowdown_intensity", 0.0)
+
+	# Restore original spawn interval
 	var spawn_timer = get_node_or_null("SpawnTimer")
 	if spawn_timer:
 		spawn_timer.wait_time = spawn_interval
 	
-	# Reset speed
-	for child in get_children():
-		if child.is_in_group("poofable") and child.has_method("set_speed_multiplier"):
-			child.set_speed_multiplier(1.0)
-			
-	# Animate shader back to normal
-	var mat = $CanvasLayer/ColorRect.material as ShaderMaterial
-	if mat:
-		var tween = create_tween()
-		tween.tween_property(mat, "shader_parameter/slowdown_intensity", 0.0, 0.5)
-		
-	# Cleanup
-	if slowdown_timer:
-		slowdown_timer.queue_free()
-		slowdown_timer = null
-		
 func _on_slowdown_button_pressed():
 	_try_activate_slowdown()
 	
 func _try_activate_slowdown():
-	if can_use_slowdown and not slowdown_used and not is_slowdown_active:
+	if not is_slowdown_active and combo_counter >= slowdown_combo_threshold and not slowdown_used:
 		_activate_slowdown()
 		slowdown_used = true
-		can_use_slowdown = false
-		$CanvasLayer/SlowdownButton.disabled = true
-		slowdown_reactivation_combo = combo_counter + 1  # 👈 force new combo streak
+		slowdown_reactivation_combo = combo_counter + 10  # or any logic to reset
 		_start_slowdown_cooldown()
-
 		
 func _start_slowdown_cooldown():
-	slowdown_cooldown = Timer.new()
-	slowdown_cooldown.one_shot = true
-	slowdown_cooldown.wait_time = SLOWDOWN_COOLDOWN_TIME
 	slowdown_cooldown_time_left = SLOWDOWN_COOLDOWN_TIME
-	slowdown_cooldown.timeout.connect(_on_slowdown_cooldown_finished)
+	slowdown_cooldown = Timer.new()
+	slowdown_cooldown.wait_time = SLOWDOWN_COOLDOWN_TIME
+	slowdown_cooldown.one_shot = true
+	slowdown_cooldown.timeout.connect(func():
+		slowdown_used = false
+		)
 	add_child(slowdown_cooldown)
 	slowdown_cooldown.start()
-	
+
 func _on_slowdown_cooldown_finished():
 	slowdown_cooldown.queue_free()
 	slowdown_cooldown = null
