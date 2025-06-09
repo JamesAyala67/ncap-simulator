@@ -6,11 +6,11 @@
 [ext_resource type="Script" uid="uid://cxy2dnyn4o022" path="res://assets/scripts/menu_canvas.gd" id="3_nrnbx"]
 [ext_resource type="Texture2D" uid="uid://bkvegwk3m6e42" path="res://assets/images/start.png" id="4_l48gv"]
 [ext_resource type="Texture2D" uid="uid://i5p4rd2070ho" path="res://assets/images/tutorial.png" id="5_ecwwl"]
-[ext_resource type="Texture2D" uid="uid://c5ypc1j87p02f" path="res://assets/images/credits.png" id="6_kk3ma"]
 [ext_resource type="Texture2D" uid="uid://ccwyykm0m1ob4" path="res://assets/images/exit.png" id="7_ecwwl"]
 [ext_resource type="AudioStream" uid="uid://dq6pcsnxb65gu" path="res://assets/audio/jungle-ish-beat-for-video-games-314073.mp3" id="8_kk3ma"]
-[ext_resource type="Texture2D" uid="uid://d0goav62sul1h" path="res://assets/images/Credits1.png" id="9_h1wq0"]
-[ext_resource type="Texture2D" uid="uid://hlu2mhrcglrq" path="res://assets/images/Credits2.png" id="10_dwrpx"]
+[ext_resource type="Texture2D" uid="uid://d0goav62sul1h" path="res://assets/images/shortCredit1.png" id="9_dwrpx"]
+[ext_resource type="Texture2D" uid="uid://ckw1h51p6o3gv" path="res://assets/images/credits.png" id="9_h1wq0"]
+[ext_resource type="Texture2D" uid="uid://hlu2mhrcglrq" path="res://assets/images/shortCredit2.png" id="10_dwrpx"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_4hy44"]
 sky_horizon_color = Color(0.662243, 0.671743, 0.686743, 1)
@@ -67,6 +67,7 @@ _data = {
 
 [node name="Menu" type="Node3D"]
 script = ExtResource("1_4hy44")
+menu_volume_percent = 25
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_l48gv")
@@ -199,7 +200,7 @@ offset_top = 424.0
 offset_right = 495.755
 offset_bottom = 522.0
 scale = Vector2(0.375, 0.375)
-texture_normal = ExtResource("6_kk3ma")
+texture_normal = ExtResource("9_h1wq0")
 
 [node name="ExitButton" type="TextureButton" parent="MenuCanvas/Panel"]
 layout_mode = 0
@@ -301,7 +302,7 @@ offset_left = -250.0
 offset_right = 250.0
 offset_bottom = 400.0
 grow_horizontal = 2
-texture = ExtResource("9_h1wq0")
+texture = ExtResource("9_dwrpx")
 
 [node name="CreditsImage2" type="TextureRect" parent="MenuCanvas/CreditOverlay/CreditScrollContainer"]
 layout_mode = 1
@@ -328,4 +329,5 @@ text = "Exit"
 [node name="MenuOST" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_kk3ma")
 autoplay = true
+bus = &"MenuOst"
 parameters/looping = true
