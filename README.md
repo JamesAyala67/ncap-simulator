@@ -1,5 +1,3 @@
 # ncap-simulator
 
-Huli-Cam: NCAP Simulator is a traffic-themed game developed for Game Jam Los Baños 2025. The game challenges players to observe traffic flow and identify vehicles that are not staying within their designated lanes. Among 43 creative and competitive entries, the game proudly secured 10th place in the event.
-
-As a first-time participant, joining the competition was truly a surreal and unforgettable experience. Together with my teammates, we faced every challenge with enthusiasm and determination, learning a lot throughout the process. The event provided not only the excitement of showcasing our creativity but also the opportunity to collaborate, learn, and grow as aspiring developers. Throughout the journey, we gained valuable lessons in teamwork, time management, game design, and problem-solving under pressure. Participating in the Game Jam was an eye-opening experience that strengthened our passion for game development and inspired us to continue improving our skills for future projects.
+Huli-Cam: NCAP Simulator is a traffic-themed game developed for Game Jam Los Baños 2025. The game challenges players to observe traffic flow and identify vehicles that are not staying within their designated lanes. Among 43 creative and competitive entries, the game proudly secured 10th place out of 44 teams in the event.
